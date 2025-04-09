@@ -74,3 +74,9 @@ This **MERN-based Task Management System** ensures a streamlined workflow with *
 
 ---
 
+## Deployment
+
+```
+https://s63-aditi-singh-capstone-tasky-1.onrender.com
+
+```
