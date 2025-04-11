@@ -8,6 +8,7 @@ const {
 
 
 router.get("/user/:userId", getTasksByUser);
+router.post("/create", createTask);
 
 
 module.exports = router;
