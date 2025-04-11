@@ -13,3 +13,10 @@ exports.createTask = async (req, res) => {
     await task.save();
     res.status(201).json(task);
   };
+
+  //post  
+  exports.assignTask = async (req, res) => {
+    const { taskId, userId } = req.body;
+    const task = await Task.findByIdAndUpdate(taskId, { assignedTo: userId }, { new: true });
+    res.json(task);
+  };
