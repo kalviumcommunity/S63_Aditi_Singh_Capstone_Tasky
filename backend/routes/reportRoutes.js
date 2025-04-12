@@ -6,4 +6,3 @@ router.get("/:type/:userId", generateReport);
 
 
 module.exports = router;
-
