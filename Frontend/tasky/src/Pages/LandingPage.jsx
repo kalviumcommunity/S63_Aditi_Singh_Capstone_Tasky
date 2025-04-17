@@ -4,6 +4,7 @@ import { DashboardOutlined, TeamOutlined, BarChartOutlined } from '@ant-design/i
 import logo from '../assets/logo.png'; // Adjust the path if needed
 import Features from '../components/Features'; // ✅ Import Features here
 import PremiumQualityAntd from '../components/PremimumQualityAntd';
+import Subscribe from '../components/Subscribe';
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
@@ -90,6 +91,9 @@ export default function LandingPage() {
       </Content>
         <div style={{ padding: '0px' }}>
       <PremiumQualityAntd />
+    </div>
+    <div style={{ padding: '0px' }}>
+      <Subscribe />
     </div>
     </Layout>
   );
