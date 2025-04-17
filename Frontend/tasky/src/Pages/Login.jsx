@@ -23,7 +23,7 @@ const Login = () => {
       <div className="square six"></div>
 
       <div className="login-box">
-        <Title level={2} style={{ color: "#f5b556", textAlign: "center" }}>
+        <Title level={2} style={{ color: "#000", textAlign: "center" }}>
           TASKY <Text style={{ fontSize: "12px" }}>{role}</Text>
         </Title>
 

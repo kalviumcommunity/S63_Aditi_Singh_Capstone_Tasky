@@ -1,6 +1,6 @@
 .premium-fullpage {
-    height: 100vh;
-    background: #fff7f6;
+    height: 70vh;
+    background: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,7 +11,7 @@
     max-width: 1400px;
     width: 100%;
     padding: 60px;
-    background-color: #fff7f6;
+    background-color: #000000;
     border-radius: 32px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }

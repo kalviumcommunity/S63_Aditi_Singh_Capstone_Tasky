@@ -79,7 +79,7 @@ const Features = () => {
   return (
     <div className="features-page">
       <div className="features-header">
-        <Title level={1}>
+        <Title level={1}style={{ marginTop: 10, fontSize: 46, color: '#fff'}}>
           Designed with <span className="highlight">Purpose</span>, <br /> Built with{" "}
           <span className="highlight">Precision</span>
         </Title>

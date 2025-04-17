@@ -5,12 +5,13 @@ import logo from '../assets/logo.png'; // Adjust the path if needed
 import Features from '../components/Features'; // ✅ Import Features here
 import PremiumQualityAntd from '../components/PremimumQualityAntd';
 import Subscribe from '../components/Subscribe';
+import Footer from '../components/Footer';
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
 export default function LandingPage() {
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
+    <Layout style={{ minHeight: '50vh', backgroundColor: '#000' }}>
       <Header style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'white' }}>
         <div style={{ fontSize: 34, fontWeight: 600, fontFamily: 'serif' }}>TASKY</div>
         <Menu
@@ -30,8 +31,8 @@ export default function LandingPage() {
         <div style={{ display: 'flex', gap: '50px', alignItems: 'stretch' }}>
           {/* Left Section */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <span style={{ color: '#f97316', fontWeight: 600 }}>• Streamline your workflow</span>
-            <Title style={{ marginTop: 10, fontSize: 46 }}>
+            <span style={{ color: '#fff', fontWeight: 600 }}>• Streamline your workflow</span>
+            <Title style={{ marginTop: 10, fontSize: 46, color: '#fff'}}>
               FOR TEAMS AND INDIVIDUALS
             </Title>
             <Paragraph style={{ fontSize: 26, color: '#555' }}>
@@ -92,9 +93,10 @@ export default function LandingPage() {
         <div style={{ padding: '0px' }}>
       <PremiumQualityAntd />
     </div>
-    <div style={{ padding: '0px' }}>
+    
       <Subscribe />
-    </div>
+    
+    <Footer/>
     </Layout>
   );
 }

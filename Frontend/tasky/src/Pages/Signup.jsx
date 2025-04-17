@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Typography, Select } from "antd";
 import "./Signup.css";
+import axios from "axios";
 
 const { Title, Text, Link } = Typography;
 const { Option } = Select;
@@ -8,8 +9,18 @@ const { Option } = Select;
 const Signup = () => {
   const [role, setRole] = useState("user");
 
-  const onFinish = (values) => {
-    console.log("Form Values:", { ...values, role });
+  const onFinish = async (values) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/users/register", {
+        ...values,
+        role,
+      });
+      console.log("Registered:", res.data);
+      alert("Registration Successful!");
+    } catch (err) {
+      console.error("Registration Error:", err);
+      alert(err.response?.data?.message || "Something went wrong!");
+    }
   };
 
   return (
@@ -23,7 +34,7 @@ const Signup = () => {
       <div className="square six"></div>
 
       <div className="signup-box">
-        <Title level={2} style={{ color: "#f5b556", textAlign: "center" }}>
+        <Title level={2} style={{ color: "#000", textAlign: "center" }}>
           TASKY <Text style={{ fontSize: "12px" }}>{role}</Text>
         </Title>
 

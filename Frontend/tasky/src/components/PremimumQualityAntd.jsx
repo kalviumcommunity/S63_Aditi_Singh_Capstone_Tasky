@@ -27,11 +27,11 @@ export default function PremiumPage() {
           <Col xs={24} md={12} className="content-col">
             <Badge.Ribbon text="Premium Quality" color="#fde68a">
               <div className="text-content">
-                <Title level={1} style={{ marginBottom: 0 }}>
+                <Title level={1} style={{ marginBottom: 0 , color: '#fff'}}>
                   Designed with purpose <br /> Built with <span className="highlight">precision</span>
                 </Title>
 
-                <Paragraph style={{ marginTop: 24, fontSize: '18px' }}>
+                <Paragraph style={{ marginTop: 24, fontSize: '18px', color: '#fff' }}>
                   Our product embodies the principle that <Text strong>“less is more”</Text>, focusing on essential
                   elements that enhance functionality while maintaining a clean aesthetic.
                   Every aspect has been thoughtfully considered to create an intuitive and seamless experience.
@@ -40,8 +40,8 @@ export default function PremiumPage() {
                 <List
                   dataSource={features}
                   renderItem={(item) => (
-                    <List.Item className="feature-item">
-                      <CheckCircleFilled style={{ color: '#f59e0b', fontSize: '20px' }} />
+                    <List.Item className="feature-item "  style={{ color: '#fff', fontSize: '20px' }}>
+                      <CheckCircleFilled style={{ color: '#fff', fontSize: '20px' }} />
                       <span>{item}</span>
                     </List.Item>
                   )}

@@ -16,8 +16,8 @@ const Subscribe = () => {
         UP
       </Button>
 
-      <div className="subscribe-box">
-        <Title level={2}>STAY UPDATED!</Title>
+      <div className="subscribe-box" >
+        <Title level={2} style={{ color: '#fff' }}>STAY UPDATED!</Title>
         <Paragraph className="subtext">
           Subscribe to our newsletter to receive product updates, design insights,
           and exclusive offers.
