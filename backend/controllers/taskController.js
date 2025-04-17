@@ -26,7 +26,7 @@ exports.createTask = async (req, res) => {
   };
   
 
-  //post  
+  
   exports.assignTask = async (req, res) => {
     try {
       const { taskId, userId } = req.body;
@@ -80,7 +80,6 @@ exports.createTask = async (req, res) => {
         }
       };
   
-
 
       exports.deleteTask = async (req, res) => {
         try {
