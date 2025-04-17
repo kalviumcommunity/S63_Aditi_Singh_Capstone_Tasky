@@ -1,0 +1,152 @@
+.signup-background {
+  background: #fff6e9;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative squares */
+.square {
+  position: absolute;
+  background-color: #f5b556;
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.square.one {
+  width: 250px;
+  height: 250px;
+  top: -50px;
+  right: -30px;
+  transform: rotate(5deg);
+}
+
+.square.two {
+  width: 250px;
+  height: 250px;
+  bottom: -80px;
+  left: -50px;
+  transform: rotate(3deg);
+}
+
+.signup-box {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.05);
+  width: 400px;
+  z-index: 2;
+}
+
+.signup-title {
+  text-align: center;
+  color: #f5b556;
+  font-weight: bold;
+}
+
+.user-text {
+  font-size: 12px;
+  vertical-align: super;
+  color: #333;
+}
+
+.signup-btn {
+  width: 100%;
+  background-color: #f5b556;
+  border-color: #f5b556;
+  color: white;
+}
+
+.signup-btn:hover {
+  background-color: #e0a743 !important;
+  border-color: #e0a743 !important;
+}
+
+.login-text {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.login-text a {
+  color: #f5b556;
+}
+/* Base square style */
+.square {
+  position: absolute;
+  background-color: #f5b556;
+  opacity: 0.2;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+/* Top Right */
+.square.one {
+  width: 200px;
+  height: 200px;
+  top: -40px;
+  right: -60px;
+  transform: rotate(6deg);
+}
+
+/* Bottom Left */
+.square.two {
+  width: 230px;
+  height: 230px;
+  bottom: -100px;
+  left: -60px;
+  transform: rotate(2deg);
+}
+
+/* Top Left (small) */
+.square.three {
+  width: 80px;
+  height: 80px;
+  top: 30px;
+  left: 30px;
+  transform: rotate(12deg);
+}
+
+/* Bottom Right (small) */
+.square.four {
+  width: 90px;
+  height: 90px;
+  bottom: 40px;
+  right: 40px;
+  transform: rotate(10deg);
+}
+
+/* Middle Left (rotated) */
+.square.five {
+  width: 120px;
+  height: 120px;
+  top: 45%;
+  left: -60px;
+  transform: rotate(20deg);
+}
+
+/* Middle Right (rotated) */
+.square.six {
+  width: 140px;
+  height: 140px;
+  top: 40%;
+  right: -80px;
+  transform: rotate(18deg);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+.square {
+  animation: float 6s ease-in-out infinite;
+}
