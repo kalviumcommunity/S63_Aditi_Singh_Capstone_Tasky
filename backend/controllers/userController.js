@@ -56,3 +56,9 @@ exports.registerUser = async (req, res) => {
   
     res.json({ message: "Login successful", role: user.role });
   };
+
+  exports.logoutUser = (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out successfully" });
+  };
+  
