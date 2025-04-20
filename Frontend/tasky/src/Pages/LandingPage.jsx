@@ -6,26 +6,17 @@ import Features from '../components/Features'; // ✅ Import Features here
 import PremiumQualityAntd from '../components/PremimumQualityAntd';
 import Subscribe from '../components/Subscribe';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
+import Navbar from '../components/Navbar';
 
 export default function LandingPage() {
+    const navigate = useNavigate();
+
   return (
     <Layout style={{ minHeight: '50vh', backgroundColor: '#000' }}>
-      <Header style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'white' }}>
-        <div style={{ fontSize: 34, fontWeight: 600, fontFamily: 'serif' }}>TASKY</div>
-        <Menu
-          mode="horizontal"
-          items={[
-            { label: 'Features', key: '1' },
-            { label: 'About', key: '2' },
-            { label: 'Product', key: '3' },
-            { label: 'Contact', key: '4' },
-            { label: <Button type="primary">SignUp</Button>, key: '5' }
-          ]}
-          style={{ flexGrow: 1, justifyContent: 'flex-end' }}
-        />
-      </Header>
+      <Navbar />
 
       <Content style={{ padding: '60px 100px' }}>
         <div style={{ display: 'flex', gap: '50px', alignItems: 'stretch' }}>
@@ -41,8 +32,9 @@ export default function LandingPage() {
             </Paragraph>
 
             <Space size="middle" style={{ marginTop: 20 }}>
-              <Button type="primary" size="large" style={{ backgroundColor: '#fbbf24', borderColor: '#fbbf24' }}>SignUp</Button>
-              <Button size="large">Login</Button>
+              
+              <Button type="primary" size="large" onClick={() => navigate('/signup')} style={{ backgroundColor: '#fbbf24', borderColor: '#fbbf24' }}>SignUp</Button>
+              <Button size="large"   onClick={() => navigate('/login')}>Login</Button>
             </Space>
 
             <Space style={{ marginTop: 40 }} size="large">
