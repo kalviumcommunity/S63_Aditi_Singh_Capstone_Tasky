@@ -1,114 +1,133 @@
-import React from "react";
-import { Row, Col, Typography, Card, Button } from "antd";
+import React from 'react';
+import { Row, Col, Card, Typography } from 'antd';
+import { motion } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 import {
-  Paintbrush,
-  LayoutDashboard,
-  MousePointerClick,
-  Puzzle,
-  Leaf,
-  SlidersHorizontal,
-} from "lucide-react";
-import "./Features.css";
+    CalendarOutlined,
+    TeamOutlined,
+    BarChartOutlined,
+    BellOutlined,
+    SecurityScanOutlined,
+    CloudSyncOutlined
+} from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
-
-const featuresData = [
-  {
-    icon: <Paintbrush size={36} />,
-    title: "Premium Design",
-    description: (
-      <>
-        A <Text strong>powerful</Text>, intuitive task management system designed to help
-        teams <Text strong>collaborate efficiently</Text> and track progress seamlessly.
-      </>
-    ),
-  },
-  {
-    icon: <LayoutDashboard size={36} />,
-    title: "Minimalist Design",
-    description: (
-      <>
-        <Text strong>Clean aesthetics</Text> focused on simplicity and function without
-        unnecessary elements.
-      </>
-    ),
-  },
-  {
-    icon: <MousePointerClick size={36} />,
-    title: "Intuitive Experience",
-    description: (
-      <>
-        Thoughtfully designed interfaces that feel <Text strong>natural</Text> and
-        effortlessly <Text strong>guide users</Text>.
-      </>
-    ),
-  },
-  {
-    icon: <Puzzle size={36} />,
-    title: "Seamless Integration",
-    description: (
-      <>
-        All elements <Text strong>work together</Text> harmoniously across devices and
-        platforms.
-      </>
-    ),
-  },
-  {
-    icon: <Leaf size={36} />,
-    title: "Sustainable Design",
-    description: (
-      <>
-        Created with <Text strong>longevity</Text> in mind, avoiding trends that quickly
-        become outdated.
-      </>
-    ),
-  },
-  {
-    icon: <SlidersHorizontal size={36} />,
-    title: "Functional Focus",
-    description: (
-      <>
-        Every element is crafted with <Text strong>purpose</Text>—avoiding clutter while
-        enhancing the <Text strong>user journey</Text>.
-      </>
-    ),
-  },
-];
+const { Title, Text } = Typography;
 
 const Features = () => {
-  return (
-    <div className="features-page">
-      <div className="features-header">
-        <Title level={1}style={{ marginTop: 10, fontSize: 46, color: '#fff'}}>
-          Designed with <span className="highlight">Purpose</span>, <br /> Built with{" "}
-          <span className="highlight">Precision</span>
-        </Title>
-        <Paragraph className="features-subtext">
-          Every element on this page was crafted to deliver not just visual appeal, but
-          <Text strong> clear functionality </Text>
-          with a seamless experience across devices.
-        </Paragraph>
-      </div>
+    const { isDark } = useTheme();
 
-      <Row gutter={[32, 48]} justify="center" className="features-grid">
-        {featuresData.map((feature, index) => (
-          <Col key={index} xs={24} sm={12} md={8}>
-            <Card className="feature-card" hoverable>
-              <div className="icon-container">{feature.icon}</div>
-              <Title level={4}>{feature.title}</Title>
-              <Paragraph>{feature.description}</Paragraph>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+    const features = [
+        {
+            icon: <CalendarOutlined />,
+            title: "Task Management",
+            description: "Organize and track tasks efficiently with our intuitive interface."
+        },
+        {
+            icon: <TeamOutlined />,
+            title: "Team Collaboration",
+            description: "Work together seamlessly with real-time updates and shared workspaces."
+        },
+        {
+            icon: <BarChartOutlined />,
+            title: "Progress Analytics",
+            description: "Get detailed insights into your team's performance and project progress."
+        },
+        {
+            icon: <BellOutlined />,
+            title: "Smart Notifications",
+            description: "Stay updated with intelligent notifications and reminders."
+        },
+        {
+            icon: <SecurityScanOutlined />,
+            title: "Secure Platform",
+            description: "Your data is protected with enterprise-grade security measures."
+        },
+        {
+            icon: <CloudSyncOutlined />,
+            title: "Cloud Sync",
+            description: "Access your tasks from anywhere with cloud synchronization."
+        }
+    ];
 
-      <div className="cta-wrapper">
-        <Button type="primary" size="large" className="cta-button">
-          Start Free Trial
-        </Button>
-      </div>
-    </div>
-  );
+    return (
+        <div id="features-section" style={{ padding: '40px 0' }}>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                style={{ textAlign: 'center', marginBottom: 60 }}
+            >
+                <Title level={2} style={{ 
+                    color: 'var(--text-primary)',
+                    marginBottom: 20 
+                }}>
+                    Features that Empower Your Workflow
+                </Title>
+                <Text style={{ 
+                    fontSize: 18,
+                    color: 'var(--text-secondary)'
+                }}>
+                    Discover the tools that will transform your task management experience
+                </Text>
+            </motion.div>
+
+            <Row gutter={[24, 24]}>
+                {features.map((feature, index) => (
+                    <Col xs={24} sm={12} md={8} key={index}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ once: true }}
+                        >
+                            <Card
+                                hoverable
+                                style={{
+                                    height: '100%',
+                                    background: isDark ? 'var(--card-bg)' : 'var(--bg-secondary)',
+                                    border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                }}
+                                bodyStyle={{
+                                    padding: '24px',
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <motion.div
+                                    whileHover={{ scale: 1.1, rotate: 5 }}
+                                    style={{
+                                        fontSize: '36px',
+                                        marginBottom: '16px',
+                                        color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
+                                    }}
+                                >
+                                    {feature.icon}
+                                </motion.div>
+                                <Title level={4} style={{ 
+                                    marginBottom: '12px',
+                                    color: 'var(--text-primary)'
+                                }}>
+                                    {feature.title}
+                                </Title>
+                                <Text style={{ 
+                                    color: 'var(--text-secondary)',
+                                    fontSize: '16px'
+                                }}>
+                                    {feature.description}
+                                </Text>
+                            </Card>
+                        </motion.div>
+                    </Col>
+                ))}
+            </Row>
+        </div>
+    );
 };
 
 export default Features;

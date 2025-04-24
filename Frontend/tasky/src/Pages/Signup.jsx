@@ -1,25 +1,60 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Typography, Select } from "antd";
-import "./Signup.css";
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  Select,
+  Upload,
+  message,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
+import "./Signup.css";
 
 const { Title, Text, Link } = Typography;
 const { Option } = Select;
 
+axios.defaults.withCredentials = true;
+
 const Signup = () => {
   const [role, setRole] = useState("user");
+  const [file, setFile] = useState(null);
 
   const onFinish = async (values) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/users/register", {
-        ...values,
-        role,
-      });
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+      formData.append("role", role);
+      formData.append("occupation", values.occupation);
+
+      if (file) {
+        formData.append("profilePic", file); // Key matches backend field name
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/users/register", // updated as per original file
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      message.success("Registration successful!");
       console.log("Registered:", res.data);
-      alert("Registration Successful!");
     } catch (err) {
       console.error("Registration Error:", err);
-      alert(err.response?.data?.message || "Something went wrong!");
+      message.error(err.response?.data?.message || "Something went wrong!");
+    }
+  };
+
+  const handleFileChange = (info) => {
+    if (info.file.status !== "removed") {
+      setFile(info.file.originFileObj);
     }
   };
 
@@ -60,7 +95,9 @@ const Signup = () => {
           <Form.Item
             label="Occupation"
             name="occupation"
-            rules={[{ required: true, message: "Please input your occupation!" }]}
+            rules={[
+              { required: true, message: "Please input your occupation!" },
+            ]}
           >
             <Input placeholder="e.g., Student, Developer, Manager" />
           </Form.Item>
@@ -69,7 +106,7 @@ const Signup = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "Please input your email!" }]}
+            rules={[{ required: true, type: "email", message: "Invalid email!" }]}
           >
             <Input />
           </Form.Item>
@@ -78,16 +115,50 @@ const Signup = () => {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+            ]}
           >
             <Input.Password />
           </Form.Item>
 
+          {/* Profile Image Upload */}
+          <Form.Item label="Profile Image" name="profilePic">
+            <Upload
+              beforeUpload={() => false}
+              onChange={handleFileChange}
+              maxCount={1}
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>Upload Profile Picture</Button>
+            </Upload>
+
+            {/* Preview */}
+            {file && (
+              <img
+                src={URL.createObjectURL(file)}
+                alt="Profile Preview"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  marginTop: "10px",
+                }}
+              />
+            )}
+          </Form.Item>
+
+          {/* Submit */}
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
-              style={{ backgroundColor: "#f5b556", borderColor: "#f5b556", width: "100%" }}
+              style={{
+                backgroundColor: "#f5b556",
+                borderColor: "#f5b556",
+                width: "100%",
+              }}
             >
               Sign Up
             </Button>

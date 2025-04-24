@@ -9,9 +9,11 @@ import {
 
 const { Sider } = Layout;
 const { Title } = Typography;
+import { useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({ role }) => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
+  const navigate = useNavigate();
 
   const handleMenuClick = (e) => {
     setSelectedKey(e.key);
@@ -56,6 +58,7 @@ const Sidebar = () => {
           <Menu.Item
             key="dashboard"
             icon={<DashboardOutlined />}
+            onClick={() => navigate('/dashboard')}
             style={{
               borderRadius: "30px",
               marginBottom: "12px",
@@ -80,6 +83,24 @@ const Sidebar = () => {
           >
             Reports
           </Menu.Item>
+
+          {/* Conditionally render profile based on role */}
+          {role === "admin" && (
+            <Menu.Item
+            key="manage-users"
+            icon={<UserOutlined />}
+            onClick={() => navigate('/manageusers')}
+            style={{
+              borderRadius: "30px",
+              marginBottom: "12px",
+              padding: "10px 20px",
+              backgroundColor: selectedKey === "manage-users" ? "#f5b556" : "transparent",
+              fontWeight: selectedKey === "manage-users" ? "bold" : "normal",
+            }}
+          >
+            Manage Users
+          </Menu.Item>
+          )}
 
           <Menu.Item
             key="profile"
