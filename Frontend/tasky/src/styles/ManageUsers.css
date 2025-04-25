@@ -1,0 +1,113 @@
+.manage-users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.manage-users-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.manage-users-header .anticon {
+  color: var(--primary-orange);
+}
+
+.add-user-btn {
+  background: var(--primary-orange) !important;
+  border: none !important;
+  border-radius: var(--button-border-radius) !important;
+  height: 40px;
+  padding: 0 20px !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-user-btn:hover {
+  background: var(--dark-orange) !important;
+}
+
+/* Table Styles */
+.ant-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #f8fafc !important;
+}
+
+/* Action Buttons */
+.ant-btn-primary {
+  background: var(--primary-orange) !important;
+  border: none !important;
+}
+
+.ant-btn-primary:hover {
+  background: var(--dark-orange) !important;
+}
+
+.ant-btn-primary.ant-btn-dangerous {
+  background: #ef4444 !important;
+}
+
+.ant-btn-primary.ant-btn-dangerous:hover {
+  background: #dc2626 !important;
+}
+
+/* Modal Styles */
+.ant-modal-header {
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 16px 24px !important;
+}
+
+.ant-modal-title {
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-content {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.ant-form-item-label > label {
+  color: var(--text-primary) !important;
+  font-weight: 500;
+}
+
+/* Tags */
+.ant-tag {
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manage-users-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .add-user-btn {
+    width: 100%;
+    justify-content: center;
+  }
+} 

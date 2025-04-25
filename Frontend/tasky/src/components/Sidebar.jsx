@@ -1,121 +1,133 @@
-import React, { useState } from "react";
-import { Layout, Menu, Button, Typography } from "antd";
+import React from 'react';
+import { Layout, Menu } from 'antd';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import {
-  DashboardOutlined,
-  FileTextOutlined,
-  UserOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+    DashboardOutlined,
+    BarChartOutlined,
+    UserOutlined,
+    TeamOutlined,
+    LogoutOutlined
+} from '@ant-design/icons';
 
 const { Sider } = Layout;
-const { Title } = Typography;
 
 const Sidebar = () => {
-  const [selectedKey, setSelectedKey] = useState("dashboard");
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { isDark } = useTheme();
+    const { user, logout } = useAuth();
 
-  const handleMenuClick = (e) => {
-    setSelectedKey(e.key);
-    console.log("Navigating to:", e.key);
-  };
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
-  return (
-    <Sider
-      width={220}
-      style={{
-        height: "100vh",
-        backgroundColor: "#fdf4e7",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "20px 16px",
-      }}
-    >
-      <div>
-        <Title
-          level={3}
-          style={{
-            textAlign: "center",
-            fontWeight: 700,
-            color: "#000",
-            marginBottom: 40,
-          }}
-        >
-          TASKY
-        </Title>
+    const adminMenuItems = [
+        {
+            key: '/admin/dashboard',
+            icon: <DashboardOutlined />,
+            label: 'Dashboard'
+        },
+        {
+            key: '/admin/reports',
+            icon: <BarChartOutlined />,
+            label: 'Reports'
+        },
+        {
+            key: '/admin/profile',
+            icon: <UserOutlined />,
+            label: 'Profile'
+        },
+        {
+            key: '/admin/manage-users',
+            icon: <TeamOutlined />,
+            label: 'Manage Users'
+        }
+    ];
 
-        <Menu
-          mode="vertical"
-          selectedKeys={[selectedKey]}
-          onClick={handleMenuClick}
-          style={{
-            backgroundColor: "transparent",
-            border: "none",
-            fontWeight: 500,
-          }}
-        >
-          <Menu.Item
-            key="dashboard"
-            icon={<DashboardOutlined />}
+    const userMenuItems = [
+        {
+            key: '/dashboard',
+            icon: <DashboardOutlined />,
+            label: 'Dashboard'
+        },
+        {
+            key: '/profile',
+            icon: <UserOutlined />,
+            label: 'Profile'
+        }
+    ];
+
+    const menuItems = user?.role === 'admin' ? adminMenuItems : userMenuItems;
+
+    return (
+        <Sider
+            width={250}
             style={{
-              borderRadius: "30px",
-              marginBottom: "12px",
-              padding: "10px 20px",
-              backgroundColor: selectedKey === "dashboard" ? "#f5b556" : "transparent",
-              fontWeight: selectedKey === "dashboard" ? "bold" : "normal",
+                background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+                borderRight: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
+                height: '100vh',
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                overflow: 'auto'
             }}
-          >
-            Dashboard
-          </Menu.Item>
-
-          <Menu.Item
-            key="reports"
-            icon={<FileTextOutlined />}
-            style={{
-              borderRadius: "30px",
-              marginBottom: "12px",
-              padding: "10px 20px",
-              backgroundColor: selectedKey === "reports" ? "#f5b556" : "transparent",
-              fontWeight: selectedKey === "reports" ? "bold" : "normal",
-            }}
-          >
-            Reports
-          </Menu.Item>
-
-          <Menu.Item
-            key="profile"
-            icon={<UserOutlined />}
-            style={{
-              borderRadius: "30px",
-              padding: "10px 20px",
-              backgroundColor: selectedKey === "profile" ? "#f5b556" : "transparent",
-              fontWeight: selectedKey === "profile" ? "bold" : "normal",
-            }}
-          >
-            Profile
-          </Menu.Item>
-        </Menu>
-      </div>
-
-      <div style={{ marginBottom: "10px" }}>
-        <Button
-          type="text"
-          icon={<LogoutOutlined />}
-          style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            fontWeight: "bold",
-            color: "#000",
-          }}
-          onClick={() => console.log("Logging out...")}
         >
-          Logout
-        </Button>
-      </div>
-    </Sider>
-  );
+            <div style={{ 
+                padding: '24px 16px',
+                textAlign: 'center',
+                borderBottom: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`
+            }}>
+                <h1 style={{ 
+                    color: 'var(--text-primary)',
+                    margin: 0,
+                    fontSize: '24px',
+                    fontWeight: 'bold'
+                }}>
+                    Tasky
+                </h1>
+            </div>
+
+            <Menu
+                mode="inline"
+                selectedKeys={[location.pathname]}
+                style={{
+                    background: 'transparent',
+                    border: 'none',
+                    marginTop: '16px'
+                }}
+                items={menuItems}
+                onClick={({ key }) => navigate(key)}
+            />
+
+            <div style={{ 
+                position: 'absolute',
+                bottom: 0,
+                width: '100%',
+                padding: '16px',
+                borderTop: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`
+            }}>
+                <Menu
+                    mode="inline"
+                    style={{
+                        background: 'transparent',
+                        border: 'none'
+                    }}
+                    items={[
+                        {
+                            key: 'logout',
+                            icon: <LogoutOutlined />,
+                            label: 'Logout',
+                            onClick: handleLogout
+                        }
+                    ]}
+                />
+            </div>
+        </Sider>
+    );
 };
 
 export default Sidebar;

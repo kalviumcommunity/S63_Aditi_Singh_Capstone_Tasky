@@ -1,0 +1,303 @@
+/* Theme Variables */
+:root {
+  --transition-speed: 0.3s;
+  --card-border-radius: 20px;
+  --button-border-radius: 12px;
+  --primary-orange: #f97316;
+  --light-orange: #fdba74;
+  --dark-orange: #c2410c;
+}
+
+/* Light Theme (default) */
+:root {
+  --bg-main: #ffffff;
+  --bg-content: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #f1f5f9;
+  --table-header-bg: #f8fafc;
+  --table-hover-bg: #f8fafc;
+  
+  /* Card Background Colors */
+  --card-bg-tasks: rgba(249, 115, 22, 0.1);
+  --card-bg-completed: rgba(249, 115, 22, 0.15);
+  --card-bg-progress: rgba(249, 115, 22, 0.2);
+  --card-bg-users: rgba(249, 115, 22, 0.25);
+  
+  /* Icon Colors */
+  --icon-tasks: var(--primary-orange);
+  --icon-completed: var(--primary-orange);
+  --icon-progress: var(--primary-orange);
+  --icon-users: var(--primary-orange);
+}
+
+/* Dark Theme */
+[data-theme='dark'] {
+  --bg-main: #1a1c23;
+  --bg-content: #1f2937;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --table-header-bg: #111827;
+  --table-hover-bg: #1f2937;
+  
+  /* Card Background Colors */
+  --card-bg-tasks: rgba(249, 115, 22, 0.05);
+  --card-bg-completed: rgba(249, 115, 22, 0.1);
+  --card-bg-progress: rgba(249, 115, 22, 0.15);
+  --card-bg-users: rgba(249, 115, 22, 0.2);
+}
+
+/* Theme Toggle Button */
+.theme-switch {
+  margin-right: 16px !important;
+}
+
+.theme-switch.ant-switch {
+  background: var(--text-secondary) !important;
+}
+
+.theme-switch.ant-switch-checked {
+  background: var(--primary-orange) !important;
+}
+
+/* Layout */
+.dashboard-content {
+  margin: 24px;
+  padding: 24px;
+  background: var(--bg-content);
+  min-height: calc(100vh - 48px);
+  border-radius: 24px;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-left h2 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Create Task Button */
+.create-task-btn {
+  background: var(--primary-orange) !important;
+  border: none !important;
+  border-radius: var(--button-border-radius) !important;
+  height: 40px;
+  padding: 0 20px !important;
+  font-weight: 500;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+  transition: all var(--transition-speed);
+}
+
+.create-task-btn:hover {
+  background: var(--dark-orange) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
+}
+
+/* Stat Cards */
+.stat-card {
+  border-radius: var(--card-border-radius) !important;
+  border: none !important;
+  height: 100%;
+  transition: all var(--transition-speed);
+  overflow: hidden;
+}
+
+.stat-card:nth-child(1) {
+  background: var(--card-bg-tasks) !important;
+}
+
+.stat-card:nth-child(2) {
+  background: var(--card-bg-completed) !important;
+}
+
+.stat-card:nth-child(3) {
+  background: var(--card-bg-progress) !important;
+}
+
+.stat-card:nth-child(4) {
+  background: var(--card-bg-users) !important;
+}
+
+.stat-card .ant-card-body {
+  padding: 20px;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  line-height: 1 !important;
+  margin-bottom: 4px !important;
+}
+
+.stat-title {
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Activity & Progress Cards */
+.activity-card,
+.progress-card {
+  border-radius: var(--card-border-radius) !important;
+  border: 1px solid #f1f5f9 !important;
+  background: var(--bg-content) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.activity-card .ant-card-head,
+.progress-card .ant-card-head {
+  background: transparent !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 16px 24px;
+  min-height: 60px;
+}
+
+.activity-card .ant-card-head-title,
+.progress-card .ant-card-head-title {
+  color: var(--text-primary) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+/* Table */
+.custom-table {
+  background: transparent !important;
+}
+
+.custom-table .ant-table {
+  background: transparent !important;
+}
+
+.custom-table .ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f1f5f9 !important;
+  color: var(--text-primary) !important;
+  padding: 12px 24px;
+  font-size: 14px;
+}
+
+.custom-table .ant-table-tbody > tr:hover > td {
+  background: #f8fafc !important;
+}
+
+.custom-table .ant-empty-description {
+  color: var(--text-secondary) !important;
+}
+
+/* Progress Section */
+.progress-item {
+  margin-top: 24px;
+  padding: 0 12px;
+}
+
+.progress-item:first-child {
+  margin-top: 16px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-info .ant-typography {
+  color: var(--text-secondary) !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.progress-info strong {
+  color: var(--text-primary) !important;
+  font-weight: 600;
+}
+
+/* Update Progress Bar Colors */
+.ant-progress-bg {
+  background: var(--primary-orange) !important;
+}
+
+/* Layout background */
+.ant-layout {
+  background: var(--bg-main) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .stat-card {
+    margin-bottom: 16px;
+  }
+} 
