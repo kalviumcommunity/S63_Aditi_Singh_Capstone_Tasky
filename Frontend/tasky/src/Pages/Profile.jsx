@@ -77,16 +77,24 @@ const Profile = () => {
   const onPasswordChange = async (values) => {
     setLoading(true);
     try {
-      await axios.put(
+      const response = await axios.put(
         'http://localhost:9000/api/users/profile/password',
-        values,
+        {
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword
+        },
         { withCredentials: true }
       );
-      message.success('Password changed successfully');
-      form.resetFields(['currentPassword', 'newPassword', 'confirmPassword']);
+
+      if (response.data.success) {
+        message.success('Password changed successfully');
+        form.resetFields(['currentPassword', 'newPassword', 'confirmPassword']);
+      } else {
+        message.error(response.data.message || 'Failed to change password');
+      }
     } catch (error) {
       console.error('Error changing password:', error);
-      message.error('Failed to change password');
+      message.error(error.response?.data?.message || 'Failed to change password');
     } finally {
       setLoading(false);
     }
