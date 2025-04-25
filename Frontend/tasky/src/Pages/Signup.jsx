@@ -35,7 +35,7 @@ const Signup = () => {
       }
 
       const res = await axios.post(
-        "http://localhost:5000/api/users/register", // updated as per original file
+        "http://localhost:9000/api/users/register", // updated as per original file
         formData,
         {
           headers: {

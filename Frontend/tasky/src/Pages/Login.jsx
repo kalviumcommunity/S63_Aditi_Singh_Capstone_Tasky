@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Typography, Card, message } from "antd";
+import { Form, Input, Button, Typography, Card, message, Select } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // For redirection
@@ -11,10 +11,11 @@ import { Layout } from "antd";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
+const { Option } = Select;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Hook for redirection
+  const navigate = useNavigate();
   const { login } = useAuth();
   const { isDark } = useTheme();
 
@@ -23,9 +24,9 @@ const Login = () => {
       setLoading(true);
       await login(values.email, values.password);
       message.success("Login successful!");
-      navigate("/dashboard");
+      // Navigation is handled by AuthContext useEffect
     } catch (error) {
-      message.error("Invalid email or password");
+      message.error(error.message || "Login failed");
     } finally {
       setLoading(false);
     }

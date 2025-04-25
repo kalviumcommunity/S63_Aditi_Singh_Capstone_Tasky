@@ -1,221 +1,211 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BulbOutlined, BulbFilled } from '@ant-design/icons';
-import { useAuth } from '../contexts/AuthContext';
-import Sidebar from '../components/Sidebar';
-import { Modal, Input, message } from 'antd';
+import {
+  Layout,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  message,
+  Typography,
+  Space,
+  Tag
+} from 'antd';
+import {
+  UserAddOutlined,
+  DeleteOutlined,
+  TeamOutlined
+} from '@ant-design/icons';
 import axios from 'axios';
+import AdminSidebar from '../components/AdminSidebar';
+import '../styles/ManageUsers.css';
 
-export default function ManageUsers() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
-  const [showAddUser, setShowAddUser] = useState(false);
-  const [newUserName, setNewUserName] = useState('');
-  const [newUserEmail, setNewUserEmail] = useState('');
+const { Content } = Layout;
+const { Title } = Typography;
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: 'http://localhost:9000/api',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Add request interceptor to handle errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      message.error('Please login again');
+      // You might want to redirect to login page here
+    }
+    return Promise.reject(error);
+  }
+);
+
+const ManageUsers = () => {
   const [users, setUsers] = useState([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (user && user.role !== 'admin') {
-      navigate('/unauthorized');
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = darkMode ? '#1e1e1e' : '#fff';
-    document.body.style.color = darkMode ? '#f5f5f5' : '#000';
-  }, [darkMode]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoadingUsers(true);
-      try {
-        const res = await axios.get('/api/users');
-        setUsers(res.data);
-      } catch (error) {
-        message.error('Failed to load users.');
-      }
-      setLoadingUsers(false);
-    };
-
-    if (user?.role === 'admin') {
-      fetchUsers();
-    }
-  }, [user]);
-
-  const handleAddUser = async () => {
-    if (!newUserEmail || !newUserName) {
-      message.error('Please enter both name and email.');
-      return;
-    }
-
+  const fetchUsers = async () => {
     try {
-      const response = await axios.post('/api/users/add', {
-        name: newUserName,
-        email: newUserEmail
-      });
-
-      message.success('User added successfully!');
-      setShowAddUser(false);
-      setNewUserEmail('');
-      setNewUserName('');
-      setUsers(prev => [...prev, response.data]);
+      setLoading(true);
+      const response = await api.get('/team-members');
+      const teamMembers = response.data.data.map(member => ({
+        ...member.userId,
+        teamMemberId: member._id,
+        role: 'team_member'
+      }));
+      setUsers(teamMembers);
     } catch (error) {
-      const errMsg = error.response?.data?.message || 'Failed to add user.';
-      message.error(errMsg);
+      console.error('Error fetching team members:', error);
+      message.error('Failed to fetch team members');
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (!user || user.role !== 'admin') return null;
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleAddUser = async (values) => {
+    try {
+      setLoading(true);
+      await api.post('/team-members', {
+        email: values.email
+      });
+      message.success('Team member added successfully');
+      setIsModalVisible(false);
+      form.resetFields();
+      fetchUsers();
+    } catch (error) {
+      console.error('Error adding team member:', error.response?.data || error.message);
+      message.error(error.response?.data?.message || 'Failed to add team member');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (teamMemberId) => {
+    try {
+      setLoading(true);
+      await api.delete(`/team-members/${teamMemberId}`);
+      message.success('Team member removed successfully');
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting team member:', error.response?.data || error.message);
+      message.error('Failed to remove team member');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role) => (
+        <Tag color={role === 'team_member' ? 'green' : 'blue'}>
+          {role.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteUser(record.teamMemberId)}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar role={user?.role} />
-
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <div style={styles.titleSection}>
-            <h2 style={styles.title}>Manage users</h2>
-            <span style={{ ...styles.roleTag, color: darkMode ? '#aaa' : '#666' }}>{user?.role}</span>
-          </div>
-
-          <div style={styles.actions}>
-            <div
-              style={{ ...styles.iconBtn, background: darkMode ? '#333' : '#f2f2f2' }}
-              onClick={() => setDarkMode(prev => !prev)}
-            >
-              {darkMode ? <BulbFilled style={{ color: '#facc15' }} /> : <BulbOutlined style={{ color: '#333' }} />}
+    <Layout style={{ minHeight: '100vh' }}>
+      <AdminSidebar />
+      <Layout style={{ marginLeft: 200 }}>
+        <Content style={{ margin: '24px', background: 'var(--bg-content)', padding: '24px', borderRadius: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div>
+              <Title level={2} style={{ margin: 0 }}>Manage Team Members</Title>
             </div>
-            <button style={styles.addUserBtn} onClick={() => setShowAddUser(true)}>+ Add user</button>
+            <Button
+              type="primary"
+              icon={<UserAddOutlined />}
+              onClick={() => setIsModalVisible(true)}
+              style={{ background: 'var(--primary-orange)', borderColor: 'var(--primary-orange)' }}
+            >
+              Add User
+            </Button>
           </div>
-        </div>
 
-        <div style={styles.userGrid}>
-          {loadingUsers ? (
-            <p>Loading users...</p>
-          ) : (
-            users.map(u => (
-              <div key={u._id} style={styles.userCard}>
-                <img src={u.avatar || 'https://via.placeholder.com/48'} alt="avatar" style={styles.avatar} />
-                <div>
-                  <div style={styles.userName}>{u.name}</div>
-                  <div style={styles.userRole}>{u.role}</div>
-                  <div style={styles.userEmail}>{u.email}</div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+          <Card>
+            <Table
+              columns={columns}
+              dataSource={users}
+              loading={loading}
+              rowKey="teamMemberId"
+              className="custom-table"
+            />
+          </Card>
 
-        {/* Add User Modal */}
-        <Modal
-          title="Add Existing User"
-          open={showAddUser}
-          onCancel={() => setShowAddUser(false)}
-          onOk={handleAddUser}
-          okText="Add User"
-          cancelText="Cancel"
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Input
-              placeholder="Enter name"
-              value={newUserName}
-              onChange={e => setNewUserName(e.target.value)}
-            />
-            <Input
-              placeholder="Enter registered email"
-              value={newUserEmail}
-              onChange={e => setNewUserEmail(e.target.value)}
-            />
-          </div>
-        </Modal>
-      </div>
-    </div>
+          <Modal
+            title="Add New User"
+            open={isModalVisible}
+            onCancel={() => {
+              setIsModalVisible(false);
+              form.resetFields();
+            }}
+            footer={null}
+          >
+            <Form
+              form={form}
+              onFinish={handleAddUser}
+              layout="vertical"
+            >
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Please input the email!' },
+                  { type: 'email', message: 'Please enter a valid email!' }
+                ]}
+              >
+                <Input placeholder="Enter user email" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={loading}>
+                  Add User
+                </Button>
+              </Form.Item>
+            </Form>
+          </Modal>
+        </Content>
+      </Layout>
+    </Layout>
   );
-}
-
-const styles = {
-  container: {
-    padding: '32px',
-    fontFamily: 'sans-serif',
-    minHeight: '100vh',
-    flex: 1,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '24px',
-  },
-  titleSection: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: '8px',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 600,
-    margin: 0,
-  },
-  roleTag: {
-    fontSize: '12px',
-    marginTop: '4px',
-  },
-  actions: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  iconBtn: {
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: '0.3s',
-  },
-  addUserBtn: {
-    padding: '8px 16px',
-    backgroundColor: '#f59e0b',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '12px',
-    fontWeight: '500',
-    fontSize: '14px',
-    cursor: 'pointer',
-  },
-  userGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '20px',
-  },
-  userCard: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '12px',
-    borderRadius: '12px',
-    background: '#f9f9f9',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-  },
-  avatar: {
-    width: '48px',
-    height: '48px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-  userName: {
-    fontWeight: 'bold',
-  },
-  userRole: {
-    fontSize: '12px',
-    color: '#999',
-  },
-  userEmail: {
-    fontSize: '12px',
-    color: '#666',
-  },
 };
+
+export default ManageUsers;
