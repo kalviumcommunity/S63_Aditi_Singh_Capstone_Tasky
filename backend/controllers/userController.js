@@ -94,7 +94,7 @@ exports.loginUser = async (req, res) => {
     res.json({ message: "Login successful", user: userData });
   } catch (error) {
     console.error("Login Error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error 500" });
   }
 };
 
@@ -103,16 +103,18 @@ exports.logoutUser = (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
+
+
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found in the database" });
     }
     res.json({ user });
   } catch (error) {
     console.error("Profile Error:", error);
-    res.status(500).json({ message: "Error fetching profile" });
+    res.status(500).json({ message: "Error fetching profile page" });
   }
 };
 
@@ -121,7 +123,7 @@ exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
     const updates = { ...req.body };
     
-    // Handle profile image upload
+    // Handle profile image upload functionality  
     if (req.file) {
       // Delete old profile image if it exists
       const user = await User.findById(userId);
@@ -132,6 +134,9 @@ exports.updateProfile = async (req, res) => {
           console.error('Error deleting old profile image:', error);
         }
       }
+
+
+
       
       // Update with new profile image path
       updates.profileImage = '/uploads/profiles/' + req.file.filename;
