@@ -175,7 +175,7 @@ exports.updatePassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
+        message: "Unfortunately User not found"
       });
     }
 
@@ -200,11 +200,13 @@ exports.updatePassword = async (req, res) => {
       message: "Password updated successfully"
     });
   } catch (error) {
-    console.error('Error updating password:', error);
+    console.error('Error updating the password:', error);
     res.status(500).json({
       success: false,
-      message: "Error updating password",
+      message: "Error updating the password",
       error: error.message
+
+      
     });
   }
 };
