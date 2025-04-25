@@ -7,6 +7,8 @@ import axios from 'axios';
 const { Content } = Layout;
 const { Title } = Typography;
 
+
+
 const Profile = () => {
   const [form] = Form.useForm();
   const { user, updateUser } = useAuth();
@@ -20,7 +22,9 @@ const Profile = () => {
         name: user.name,
         email: user.email,
       });
+
       setImageUrl(user.profileImage);
+
     }
   }, [user, form]);
 
@@ -41,6 +45,8 @@ const Profile = () => {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
+
+
           }
         }
       );
@@ -49,8 +55,8 @@ const Profile = () => {
       setImageUrl(response.data.data.profileImage);
       message.success('Profile updated successfully');
     } catch (error) {
-      console.error('Error updating profile:', error);
-      message.error('Failed to update profile');
+      console.error('Error updating your profile:', error);
+      message.error('Failed to update your profile');
     } finally {
       setLoading(false);
     }
@@ -123,6 +129,7 @@ const Profile = () => {
               ) : (
                 <Avatar size={100} icon={<UserOutlined />} />
               )}
+              
             </div>
             
             <Form
