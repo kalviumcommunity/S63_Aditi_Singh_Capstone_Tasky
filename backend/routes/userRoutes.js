@@ -12,6 +12,7 @@ router.post("/logout", userController.logoutUser);
 // Protected routes
 router.get("/profile", authenticate, userController.getProfile);
 router.put("/profile", authenticate, upload.single("profileImage"), userController.updateProfile);
+router.put("/profile/password", authenticate, userController.updatePassword);
 router.get("/users", authenticate, authorizeRoles("admin"), userController.getAllUsers);
 router.put("/users/:id", authenticate, authorizeRoles("admin"), userController.updateUser);
 
