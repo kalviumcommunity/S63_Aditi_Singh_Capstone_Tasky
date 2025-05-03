@@ -66,7 +66,12 @@ const Sidebar = () => {
         <Sider
             width={250}
             style={{
-                background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+                background: isDark ? 'rgba(24, 24, 28, 0.85)' : 'var(--bg-secondary)',
+                color: isDark ? '#e5e7eb' : 'var(--text-primary)',
+                backdropFilter: isDark ? 'blur(12px)' : undefined,
+                boxShadow: isDark ? '0 8px 32px 0 rgba(0,0,0,0.45)' : '0 1px 2px 0 rgba(0,0,0,0.05)',
+                borderRadius: isDark ? '18px' : '0',
+                margin: isDark ? '18px 0 18px 18px' : '0',
                 borderRight: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
                 height: '100vh',
                 position: 'fixed',
@@ -82,10 +87,11 @@ const Sidebar = () => {
                 borderBottom: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`
             }}>
                 <h1 style={{ 
-                    color: 'var(--text-primary)',
+                    color: isDark ? '#fbbf24' : 'var(--text-primary)',
                     margin: 0,
                     fontSize: '24px',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    letterSpacing: 2
                 }}>
                     Tasky
                 </h1>
@@ -97,8 +103,14 @@ const Sidebar = () => {
                 style={{
                     background: 'transparent',
                     border: 'none',
-                    marginTop: '16px'
+                    marginTop: '16px',
+                    color: isDark ? '#e5e7eb' : 'var(--text-primary)',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    borderRadius: isDark ? '12px' : '0',
+                    overflow: 'hidden'
                 }}
+                theme={isDark ? 'dark' : 'light'}
                 items={menuItems}
                 onClick={({ key }) => navigate(key)}
             />
@@ -114,8 +126,12 @@ const Sidebar = () => {
                     mode="inline"
                     style={{
                         background: 'transparent',
-                        border: 'none'
+                        border: 'none',
+                        color: isDark ? '#e5e7eb' : 'var(--text-primary)',
+                        fontWeight: 500,
+                        fontSize: 16
                     }}
+                    theme={isDark ? 'dark' : 'light'}
                     items={[
                         {
                             key: 'logout',

@@ -87,17 +87,17 @@ const Navbar = () => {
         },
     ];
 
-    return (
-        <Header
-            style={{
+  return (
+    <Header
+      style={{
                 position: "sticky",
                 top: 0,
-                zIndex: 1000,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+        zIndex: 1000, 
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
                 background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.8)",
-                padding: "0 40px",
+        padding: "0 40px",
                 backdropFilter: "blur(10px)",
                 borderBottom: isDark 
                     ? "1px solid rgba(255, 255, 255, 0.1)"
@@ -105,23 +105,23 @@ const Navbar = () => {
                 boxShadow: isDark
                     ? "0 4px 30px rgba(0, 0, 0, 0.1)"
                     : "0 4px 30px rgba(0, 0, 0, 0.05)"
-            }}
-        >
+      }}
+    >
             <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                style={{
-                    fontSize: 34,
-                    fontWeight: 600,
-                    fontFamily: "serif",
+        style={{
+          fontSize: 34,
+          fontWeight: 600,
+          fontFamily: "serif",
                     color: isDark ? "#fff" : "#1a1a1a",
                     cursor: "pointer",
-                }}
+        }}
                 whileHover={{ scale: 1.05 }}
                 onClick={() => navigate('/')}
-            >
-                TASKY
+      >
+        TASKY
             </motion.div>
 
             <div style={{ 
@@ -129,16 +129,16 @@ const Navbar = () => {
                 alignItems: 'center', 
                 gap: '20px' 
             }}>
-                <Menu
-                    mode="horizontal"
-                    selectable={false}
-                    style={{
-                        flexGrow: 1,
-                        justifyContent: "flex-end",
-                        fontWeight: 500,
-                        borderBottom: "none",
+      <Menu
+        mode="horizontal"
+        selectable={false}
+        style={{
+          flexGrow: 1,
+          justifyContent: "flex-end",
+          fontWeight: 500,
+          borderBottom: "none",
                         background: "transparent",
-                    }}
+        }}
                     onClick={({ key }) => handleMenuClick(key)}
                     items={menuItems}
                 />
@@ -161,12 +161,12 @@ const Navbar = () => {
                                 : "0 4px 14px 0 rgba(245, 158, 11, 0.39)"
                         }}
                     >
-                        Sign Up
-                    </Button>
+                Sign Up
+              </Button>
                 </motion.div>
             </div>
-        </Header>
-    );
+    </Header>
+  );
 };
 
 export default Navbar;
