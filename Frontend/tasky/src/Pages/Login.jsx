@@ -8,6 +8,8 @@ import { useTheme } from "../contexts/ThemeContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Layout } from "antd";
+import { auth, googleProvider } from '../../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -16,7 +18,7 @@ const { Option } = Select;
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, updateUser } = useAuth();
   const { isDark } = useTheme();
 
   const onFinish = async (values) => {
@@ -27,6 +29,28 @@ const Login = () => {
       // Navigation is handled by AuthContext useEffect
     } catch (error) {
       message.error(error.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Google Sign-In handler
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      // You may want to send user info to your backend here for session/token
+      updateUser({
+        name: user.displayName,
+        email: user.email,
+        profileImage: user.photoURL,
+        // Add more fields as needed
+      });
+      message.success('Google sign-in successful!');
+      navigate('/');
+    } catch (error) {
+      message.error(error.message || 'Google sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -137,6 +161,27 @@ const Login = () => {
                   Sign In
                 </Button>
               </Form.Item>
+
+              {/* Google Sign-In Button */}
+              <Button
+                block
+                size="large"
+                icon={<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style={{ width: 20, marginRight: 8 }} />}
+                style={{
+                  marginTop: 16,
+                  background: '#fff',
+                  color: '#23232a',
+                  border: '1.5px solid #fbbf24',
+                  fontWeight: 600,
+                  fontSize: 16,
+                  height: 45,
+                  boxShadow: '0 2px 8px rgba(251,191,36,0.09)'
+                }}
+                onClick={handleGoogleSignIn}
+                loading={loading}
+              >
+                Sign in with Google
+              </Button>
 
               <div style={{ textAlign: 'center' }}>
                 <Text style={{ color: 'var(--text-secondary)' }}>
