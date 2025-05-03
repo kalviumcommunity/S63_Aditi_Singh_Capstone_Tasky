@@ -17,39 +17,39 @@ const Features = () => {
     const { isDark } = useTheme();
 
     const features = [
-        {
+  {
             icon: <CalendarOutlined />,
             title: "Task Management",
             description: "Organize and track tasks efficiently with our intuitive interface."
-        },
-        {
+  },
+  {
             icon: <TeamOutlined />,
             title: "Team Collaboration",
             description: "Work together seamlessly with real-time updates and shared workspaces."
-        },
-        {
+  },
+  {
             icon: <BarChartOutlined />,
             title: "Progress Analytics",
             description: "Get detailed insights into your team's performance and project progress."
-        },
-        {
+  },
+  {
             icon: <BellOutlined />,
             title: "Smart Notifications",
             description: "Stay updated with intelligent notifications and reminders."
-        },
-        {
+  },
+  {
             icon: <SecurityScanOutlined />,
             title: "Secure Platform",
             description: "Your data is protected with enterprise-grade security measures."
-        },
-        {
+  },
+  {
             icon: <CloudSyncOutlined />,
             title: "Cloud Sync",
             description: "Access your tasks from anywhere with cloud synchronization."
         }
     ];
 
-    return (
+  return (
         <div id="features-section" style={{ padding: '40px 0' }}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -63,7 +63,7 @@ const Features = () => {
                     marginBottom: 20 
                 }}>
                     Features that Empower Your Workflow
-                </Title>
+        </Title>
                 <Text style={{ 
                     fontSize: 18,
                     color: 'var(--text-secondary)'
@@ -121,13 +121,13 @@ const Features = () => {
                                 }}>
                                     {feature.description}
                                 </Text>
-                            </Card>
+            </Card>
                         </motion.div>
-                    </Col>
-                ))}
-            </Row>
-        </div>
-    );
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
 };
 
 export default Features;

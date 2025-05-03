@@ -20,14 +20,14 @@ export default function LandingPage() {
     const navigate = useNavigate();
     const { isDark } = useTheme();
 
-    return (
+  return (
         <Layout style={{ 
             minHeight: '50vh', 
             background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
             color: 'var(--text-primary)'
         }}>
             <BackgroundEffect />
-            <Navbar />
+      <Navbar />
 
             <Content style={{ padding: '60px 100px', position: 'relative' }}>
                 <motion.div
@@ -36,8 +36,8 @@ export default function LandingPage() {
                     transition={{ duration: 0.8 }}
                     style={{ display: 'flex', gap: '50px', alignItems: 'stretch' }}
                 >
-                    {/* Left Section */}
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          {/* Left Section */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                         <motion.span
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -57,17 +57,17 @@ export default function LandingPage() {
                                 ? '0 2px 4px rgba(0,0,0,0.3)' 
                                 : '0 2px 4px rgba(0,0,0,0.1)'
                         }}>
-                            FOR TEAMS AND INDIVIDUALS
-                        </Title>
+              FOR TEAMS AND INDIVIDUALS
+            </Title>
                         <Paragraph style={{
                             fontSize: 26,
                             color: 'var(--text-secondary)'
                         }}>
-                            A powerful, intuitive task management system
-                            designed to help teams collaborate efficiently and track progress seamlessly.
-                        </Paragraph>
+              A powerful, intuitive task management system
+              designed to help teams collaborate efficiently and track progress seamlessly.
+            </Paragraph>
 
-                        <Space size="middle" style={{ marginTop: 20 }}>
+            <Space size="middle" style={{ marginTop: 20 }}>
                             <Button
                                 type="primary"
                                 size="large"
@@ -92,9 +92,9 @@ export default function LandingPage() {
                             >
                                 Login
                             </Button>
-                        </Space>
+            </Space>
 
-                        <Space style={{ marginTop: 40 }} size="large">
+            <Space style={{ marginTop: 40 }} size="large">
                             {[
                                 { icon: <DashboardOutlined />, text: "Track progress easily" },
                                 { icon: <TeamOutlined />, text: "Team collaboration" },
@@ -112,8 +112,8 @@ export default function LandingPage() {
                                     <div>{item.text}</div>
                                 </motion.div>
                             ))}
-                        </Space>
-                    </div>
+            </Space>
+          </div>
 
                     {/* Right Section */}
                     <motion.div
@@ -121,20 +121,20 @@ export default function LandingPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8 }}
                         style={{
-                            flex: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: '60px 30px',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '60px 30px',
                             background: isDark ? 'var(--card-bg)' : 'rgba(255, 255, 255, 0.9)',
                             backdropFilter: 'blur(10px)',
-                            borderRadius: '20px',
+            borderRadius: '20px',
                             border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
                             boxShadow: isDark
                                 ? '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
                                 : '0 8px 32px 0 rgba(0, 0, 0, 0.1)',
-                            minHeight: '400px'
+            minHeight: '400px'
                         }}
                     >
                         <motion.p
@@ -152,13 +152,13 @@ export default function LandingPage() {
                         </motion.p>
 
                         <motion.img
-                            src={logo}
-                            alt="Tasky Logo"
-                            style={{
-                                width: '120px',
-                                height: '120px',
-                                objectFit: 'contain',
-                                marginBottom: 10,
+              src={logo}
+              alt="Tasky Logo"
+              style={{
+                width: '120px',
+                height: '120px',
+                objectFit: 'contain',
+                marginBottom: 10,
                                 filter: isDark 
                                     ? 'drop-shadow(0 0 10px rgba(251, 191, 36, 0.3))'
                                     : 'drop-shadow(0 0 10px rgba(245, 158, 11, 0.3))'
@@ -171,8 +171,8 @@ export default function LandingPage() {
                                 duration: 5,
                                 repeat: Infinity,
                                 ease: "easeInOut"
-                            }}
-                        />
+              }}
+            />
 
                         <Title level={1} style={{
                             marginTop: 10,
@@ -189,18 +189,18 @@ export default function LandingPage() {
                 </motion.div>
 
                 <div style={{ marginTop: '100px' }}>
-                    <Features />
-                </div>
-            </Content>
+          <Features />
+        </div>
+      </Content>
 
             <div style={{ padding: '0px', position: 'relative', zIndex: 1 }}>
-                <PremiumQualityAntd />
-            </div>
-            
+      <PremiumQualityAntd />
+    </div>
+    
             <div id="subscribe-section">
-                <Subscribe />
+      <Subscribe />
             </div>
             <Footer />
-        </Layout>
-    );
+    </Layout>
+  );
 }

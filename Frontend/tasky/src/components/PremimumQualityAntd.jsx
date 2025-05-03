@@ -14,7 +14,7 @@ const { Title, Text } = Typography;
 const PremiumQualityAntd = () => {
     const { isDark } = useTheme();
 
-    const features = [
+const features = [
         {
             icon: <RocketOutlined />,
             title: "Lightning Fast",
@@ -37,7 +37,7 @@ const PremiumQualityAntd = () => {
         }
     ];
 
-    return (
+  return (
         <div style={{ 
             padding: '60px 0',
             background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
@@ -146,11 +146,11 @@ const PremiumQualityAntd = () => {
                                 </Text>
                             </Card>
                         </motion.div>
-                    </Col>
+          </Col>
                 ))}
-            </Row>
-        </div>
-    );
+        </Row>
+    </div>
+  );
 };
 
 export default PremiumQualityAntd;

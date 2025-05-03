@@ -150,7 +150,7 @@ const ManageUsers = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <div>
               <Title level={2} style={{ margin: 0 }}>Manage Team Members</Title>
-            </div>
+          </div>
             <Button
               type="primary"
               icon={<UserAddOutlined />}
@@ -159,7 +159,7 @@ const ManageUsers = () => {
             >
               Add User
             </Button>
-          </div>
+        </div>
 
           <Card>
             <Table
@@ -171,7 +171,7 @@ const ManageUsers = () => {
             />
           </Card>
 
-          <Modal
+        <Modal
             title="Add New User"
             open={isModalVisible}
             onCancel={() => {
@@ -201,7 +201,7 @@ const ManageUsers = () => {
                 </Button>
               </Form.Item>
             </Form>
-          </Modal>
+        </Modal>
         </Content>
       </Layout>
     </Layout>
