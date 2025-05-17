@@ -1,4 +1,4 @@
-// src/App.jsx
+ // src/App.jsx
 import React from 'react';
 import { Button, Layout, Typography, Space } from 'antd';
 import { DashboardOutlined, TeamOutlined, BarChartOutlined } from '@ant-design/icons';
@@ -72,13 +72,22 @@ export default function LandingPage() {
                                 type="primary"
                                 size="large"
                                 onClick={() => navigate('/signup')}
-                               
+                                style={{
+                                    backgroundColor: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
+                                    borderColor: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
+                                    boxShadow: `0 4px 14px 0 ${isDark ? 'rgba(251, 191, 36, 0.39)' : 'rgba(245, 158, 11, 0.39)'}`
+                                }}
                             >
                                 Sign Up
                             </Button>
                             <Button
                                 size="large"
-                                
+                                style={{
+                                    borderColor: 'var(--text-primary)',
+                                    color: 'var(--text-primary)',
+                                    background: 'transparent',
+                                    backdropFilter: 'blur(10px)'
+                                }}
                                 onClick={() => navigate('/login')}
                             >
                                 Login
@@ -91,7 +100,17 @@ export default function LandingPage() {
                                 { icon: <TeamOutlined />, text: "Team collaboration" },
                                 { icon: <BarChartOutlined />, text: "Insightful analytics" }
                             ].map((item, index) => (
-                                
+                                <motion.div
+                                    key={index}
+                                    whileHover={{ scale: 1.05 }}
+                                    style={{ 
+                                        textAlign: 'center', 
+                                        color: 'var(--text-primary)'
+                                    }}
+                                >
+                                    <div style={{ fontSize: '20px' }}>{item.icon}</div>
+                                    <div>{item.text}</div>
+                                </motion.div>
                             ))}
             </Space>
           </div>
@@ -122,7 +141,12 @@ export default function LandingPage() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.5 }}
-                            
+                            style={{ 
+                                color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
+                                fontWeight: 600,
+                                fontSize: '20px',
+                                marginBottom: 10
+                            }}
                         >
                             • Dashboard
                         </motion.p>
@@ -178,5 +202,6 @@ export default function LandingPage() {
             </div>
             <Footer />
     </Layout>
-  );
+  );
 }
+  
