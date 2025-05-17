@@ -34,27 +34,7 @@ const Login = () => {
     }
   };
 
-  // Google Sign-In handler
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      // You may want to send user info to your backend here for session/token
-      updateUser({
-        name: user.displayName,
-        email: user.email,
-        profileImage: user.photoURL,
-        // Add more fields as needed
-      });
-      message.success('Google sign-in successful!');
-      navigate('/');
-    } catch (error) {
-      message.error(error.message || 'Google sign-in failed');
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
 
   return (
     <Layout style={{ 
