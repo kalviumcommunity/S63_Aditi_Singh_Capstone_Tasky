@@ -8,6 +8,8 @@ const upload = require("../middlewares/uploadMiddleware");
 router.post("/register", upload.single("profileImage"), userController.registerUser);
 router.post("/login", userController.loginUser);
 router.post("/logout", userController.logoutUser);
+router.post("/check-google", userController.checkGoogleUser);
+router.post("/google-login", userController.googleLoginUser);
 
 // Protected routes
 router.get("/profile", authenticate, userController.getProfile);

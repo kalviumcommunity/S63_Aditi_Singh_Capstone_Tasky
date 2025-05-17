@@ -9,6 +9,7 @@ import {
   message,
   Card,
   Space,
+  Modal,
 } from "antd";
 import { 
   UploadOutlined, 
@@ -25,6 +26,9 @@ import { useTheme } from "../contexts/ThemeContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Layout } from "antd";
+import { auth, googleProvider } from '../../firebase';
+import { signInWithPopup } from 'firebase/auth';
+import axios from 'axios';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -35,8 +39,12 @@ const Signup = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register, updateUser } = useAuth();
   const { isDark } = useTheme();
+  const [googleUser, setGoogleUser] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalRole, setModalRole] = useState('user');
+  const [modalOccupation, setModalOccupation] = useState('');
 
   const onFinish = async (values) => {
     try {
@@ -67,6 +75,76 @@ const Signup = () => {
     if (info.file.status !== "removed") {
       setFile(info.file.originFileObj);
     }
+  };
+
+  // Google Sign Up handler
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      // Check if user exists in backend
+      const checkRes = await axios.post('http://localhost:9000/api/users/check-google', { email: user.email });
+      if (checkRes.data.exists) {
+        // User exists, log them in
+        const loginRes = await axios.post('http://localhost:9000/api/users/google-login', { email: user.email });
+        const userData = loginRes.data.user;
+        updateUser(userData);
+        message.success('Welcome back!');
+        if (userData.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+        return;
+      }
+      // If not exists, show modal
+      setGoogleUser(user);
+      setIsModalVisible(true);
+    } catch (error) {
+      message.error(error.message || 'Google sign up failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle modal submit
+  const handleModalOk = async () => {
+    if (!modalOccupation) {
+      message.error('Please enter your occupation');
+      return;
+    }
+    setLoading(true);
+    try {
+      // Send Google user info + role + occupation to backend
+      const formData = new FormData();
+      formData.append('name', googleUser.displayName);
+      formData.append('email', googleUser.email);
+      formData.append('role', modalRole);
+      formData.append('occupation', modalOccupation);
+      formData.append('profileImage', googleUser.photoURL);
+      // You may want to generate a random password or handle passwordless
+      formData.append('password', googleUser.uid); // Use UID as a placeholder
+      await register(formData);
+      message.success('Registration successful!');
+      setIsModalVisible(false);
+      setGoogleUser(null);
+      if (modalRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      message.error(err.response?.data?.message || 'Something went wrong!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle modal cancel
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setGoogleUser(null);
   };
 
   return (
@@ -280,6 +358,27 @@ const Signup = () => {
                 </Button>
               </Form.Item>
 
+              {/* Google Sign Up Button */}
+              <Button
+                block
+                size="large"
+                icon={<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style={{ width: 20, marginRight: 8 }} />}
+                style={{
+                  marginTop: 16,
+                  background: '#fff',
+                  color: '#23232a',
+                  border: '1.5px solid #fbbf24',
+                  fontWeight: 600,
+                  fontSize: 16,
+                  height: 45,
+                  boxShadow: '0 2px 8px rgba(251,191,36,0.09)'
+                }}
+                onClick={handleGoogleSignUp}
+                loading={loading}
+              >
+                Sign up with Google
+              </Button>
+
               <div style={{ textAlign: 'center' }}>
                 <Text style={{ color: 'var(--text-secondary)' }}>
                   Already have an account?{' '}
@@ -297,6 +396,42 @@ const Signup = () => {
                 </Text>
               </div>
             </Form>
+
+            {/* Google Role Selection Modal */}
+            <Modal
+              title="Complete Your Registration"
+              open={isModalVisible}
+              onOk={handleModalOk}
+              onCancel={handleModalCancel}
+              okText="Register"
+              confirmLoading={loading}
+              cancelButtonProps={{ disabled: loading }}
+            >
+              <div style={{ marginBottom: 16 }}>
+                <b>Name:</b> {googleUser?.displayName}<br />
+                <b>Email:</b> {googleUser?.email}
+              </div>
+              <div style={{ marginBottom: 16 }}>
+                <b>Role:</b>
+                <Select
+                  value={modalRole}
+                  onChange={setModalRole}
+                  style={{ width: 120, marginLeft: 8 }}
+                >
+                  <Option value="user">User</Option>
+                  <Option value="admin">Admin</Option>
+                </Select>
+              </div>
+              <div>
+                <b>Occupation:</b>
+                <Input
+                  value={modalOccupation}
+                  onChange={e => setModalOccupation(e.target.value)}
+                  placeholder="e.g., Student, Developer, Manager"
+                  style={{ marginTop: 8 }}
+                />
+              </div>
+            </Modal>
           </Card>
         </motion.div>
       </Content>
