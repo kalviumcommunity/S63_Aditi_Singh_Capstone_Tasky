@@ -78,6 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (userData) => {
     setUser(userData);
+    setIsAuthenticated(true);
   };
 
   const isAdmin = user?.role === 'admin';
