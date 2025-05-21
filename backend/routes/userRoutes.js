@@ -16,6 +16,7 @@ router.get("/profile", authenticate, userController.getProfile);
 router.put("/profile", authenticate, upload.single("profileImage"), userController.updateProfile);
 router.put("/profile/password", authenticate, userController.updatePassword);
 router.get("/users", authenticate, authorizeRoles("admin"), userController.getAllUsers);
+router.get("/managers", authenticate, authorizeRoles("admin"), userController.getManagerUsers);
 router.put("/users/:id", authenticate, authorizeRoles("admin"), userController.updateUser);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-   const User = require("../models/User");
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const bcrypt = require('bcrypt');
@@ -8,6 +8,16 @@ exports.getAllUsers = async (req, res) => {
   const users = await User.find();
   res.json(users);
 };  //get
+
+exports.getManagerUsers = async (req, res) => {
+  try {
+    const users = await User.find({ role: 'manager' }).select('name email');
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching manager users:', error);
+    res.status(500).json({ message: 'Error fetching manager users' });
+  }
+};
 
 exports.registerUser = async (req, res) => {
   console.log("Uploaded File:", req.file); // 👈 Add this line here
@@ -81,6 +91,15 @@ exports.loginUser = async (req, res) => {
       sameSite: "strict",
       maxAge: 3600000, // 1 hour
     });
+
+    // Set user information on the session
+    req.session.user = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      profileImage: user.profileImage
+    };
 
     // Send user data without password
     const userData = {
@@ -205,8 +224,6 @@ exports.updatePassword = async (req, res) => {
       success: false,
       message: "Error updating the password",
       error: error.message
-
-      
     });
   }
 };
@@ -250,7 +267,7 @@ exports.googleLoginUser = async (req, res) => {
     res.json({ message: 'Google login successful', user: userData });
   } catch (error) {
     res.status(500).json({ message: 'Google login error', error });
-  }
+  }
 };
 
 

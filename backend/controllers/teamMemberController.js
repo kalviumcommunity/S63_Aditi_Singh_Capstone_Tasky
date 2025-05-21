@@ -55,6 +55,9 @@ const addTeamMember = async (req, res) => {
             adminId
         });
 
+        // Update the user's role to 'manager'
+        await User.findByIdAndUpdate(user._id, { role: 'manager' });
+
         const populatedMember = await TeamMember.findById(teamMember._id)
             .populate('userId', 'name email')
             .lean();

@@ -21,7 +21,7 @@ const Dashboard = () => {
   });
   const [recentTasks, setRecentTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { isDark } = useAuth();
 
   useEffect(() => {
@@ -133,6 +133,19 @@ const Dashboard = () => {
         }}>
           Welcome back! Here's what's happening
         </Text>
+        <button onClick={logout} style={{ 
+          background: '#ff4d4f',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          marginTop: '20px'
+        }}>
+          Logout
+        </button>
       </motion.div>
 
       <MotionRow 
