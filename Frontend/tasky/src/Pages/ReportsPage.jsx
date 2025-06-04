@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Select, DatePicker, Spin, Row, Col, Card, message, Empty, Layout } from 'antd';
 import CalendarView from '../components/CalendarView';
 import PieChartComponent from '../components/PieChartComponent';
-import Sidebar from '../components/Sidebar';
+import AdminSidebar from '../components/AdminSidebar';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { useAuth } from '../contexts/AuthContext';
+
 
 import utc from 'dayjs/plugin/utc';
 
@@ -33,29 +33,15 @@ const ReportsPage = () => {
     overdue: 0
   });
 
-  const { user } = useAuth();
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const userId = user?._id;
-
-        if (!userId) {
-          message.error('Please log in to view reports.');
-          setLoading(false);
-          return;
-        }
-
+        const userId = 'all'; // Change to actual user or keep 'all' for admin
         // Use dayjs with UTC for timezone awareness
         const dateParam = dayjs(selectedDate).utc().toISOString();
-        const res = await axios.get(`http://localhost:9000/api/reports/${reportType}/${userId}?date=${dateParam}`, {
-          withCredentials: true,
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const res = await axios.get(`http://localhost:9000/api/reports/${reportType}/${userId}?date=${dateParam}`);
         
         // Validate the response data
         if (!res.data || typeof res.data !== 'object') {
@@ -93,7 +79,7 @@ const ReportsPage = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}> {/* Use Ant Design Layout */}
-      <Sidebar /> {/* Add the regular Sidebar */}
+      <AdminSidebar /> {/* Add the AdminSidebar */}
       <Layout className="site-layout" style={{ marginLeft: 200 }}> {/* Use a nested Layout for content */}
         <Content style={{ margin: '0 16px' }}> {/* Add margin for spacing */}
           <div style={{ padding: 24 }}>
