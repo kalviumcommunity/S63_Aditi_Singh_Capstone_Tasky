@@ -267,4 +267,52 @@ exports.getTaskDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// New function to get task statistics
+exports.getTaskStats = async (req, res) => {
+  try {
+    const { userId } = req.query; // Get userId from query parameter
+
+    console.log('Received userId for task stats:', userId); // Add logging
+
+    if (!userId) {
+      console.log('User ID is missing.'); // Add logging
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const filter = { assignedTo: userId }; // Always filter by assignedTo
+    console.log('Applying filter for task stats:', filter); // Add logging
+
+    // Get current date for overdue calculation
+    const currentDate = new Date();
+
+    // Get total tasks
+    const totalTasks = await Task.countDocuments(filter);
+
+    // Get completed tasks
+    const completedTasks = await Task.countDocuments({ ...filter, status: 'completed' });
+
+    // Get pending tasks
+    const pendingTasks = await Task.countDocuments({ ...filter, status: 'pending' });
+
+    // Get overdue tasks (tasks that are pending and past due date)
+    const overdueTasks = await Task.countDocuments({
+      ...filter,
+      status: 'pending',
+      dueDate: { $lt: currentDate }
+    });
+
+    console.log('Fetched stats:', { totalTasks, completedTasks, pendingTasks, overdueTasks }); // Add logging
+
+    res.status(200).json({
+      totalTasks,
+      completedTasks,
+      pendingTasks,
+      overdueTasks,
+    });
+  } catch (error) {
+    console.error('Error fetching task stats:', error);
+    res.status(500).json({ error: 'Failed to fetch task statistics' });
+  }
+};
+
       

@@ -1,138 +1,162 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
 const { catchAsyncErrors } = require('../middlewares/catchAsyncErrors');
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
 
+dayjs.extend(utc);
+
+// Generate task report based on type (daily/weekly/monthly) and user
 exports.generateReport = async (req, res) => {
-  const { type, userId } = req.params;
-  const now = new Date();
-  let startDate;
+  try {
+    const { type, userId } = req.params;
+    const { date } = req.query; // Get date from query parameters
 
-  if (type === "daily") {
-    startDate = new Date(now.setHours(0, 0, 0, 0));
-  } else if (type === "weekly") {
-    startDate = new Date(now.setDate(now.getDate() - 7));
-  } else if (type === "monthly") {
-    startDate = new Date(now.setMonth(now.getMonth() - 1));
-  } else {
-    return res.status(400).json({ message: "Invalid report type" });
-  }
+    let startDate;
+    let endDate = dayjs.utc(date).endOf('day').toDate(); // Default end date to end of the selected day (UTC)
 
-  const tasks = await Task.find({
-    assignedTo: userId,
-    createdAt: { $gte: startDate },
-  });
+    if (!date) {
+        return res.status(400).json({ message: "Date query parameter is required" });
+    }
 
-  res.json(tasks);
+    const selectedDate = dayjs.utc(date);
+
+    if (!selectedDate.isValid()) {
+         return res.status(400).json({ message: "Invalid date format" }); // Corrected error message
+     }
+
+    switch (type) {
+        case "daily":
+            startDate = selectedDate.startOf('day').toDate();
+            endDate = selectedDate.endOf('day').toDate();
+            break;
+        case "weekly":
+            startDate = selectedDate.startOf('week').toDate(); // start of the week
+            endDate = selectedDate.endOf('week').toDate(); // end of the week
+            break;
+        case "monthly":
+            startDate = selectedDate.startOf('month').toDate(); // start of the month
+            endDate = selectedDate.endOf('month').toDate(); // end of the month
+            break;
+        default:
+            return res.status(400).json({ message: "Invalid report type" });
+    }
+
+    // Build the query object
+    const tasks = await Task.find({
+      // Only filter by assignedTo if userId is not 'all'
+      ...(userId !== 'all' && { assignedTo: userId }),
+      createdAt: { 
+        $gte: startDate, 
+        $lte: endDate 
+      },
+    });
+
+    // Calculate summary data
+    const statusData = tasks.reduce((acc, task) => {
+        // Assuming task has a 'status' field (e.g., 'completed', 'pending', 'overdue')
+        // Initialize status properties if they don't exist
+        if (!acc[task.status]) { acc[task.status] = 0; }
+        acc[task.status]++;
+        return acc;
+    }, { completed: 0, pending: 0, overdue: 0 });
+
+    // Send the response in the expected format
+    res.json({
+        tasks: tasks,
+        statusData: statusData
+    });
+
+   } catch (error) {
+     console.error("Report generation error:", error);
+     res.status(500).json({ message: "Error generating report", error: error.message });
+   }
 };
 
-exports.getReportSummary = catchAsyncErrors(async (req, res, next) => {
-  const { userId, priority } = req.query; // Get filters from query parameters
+// Function to insert dummy tasks
+exports.insertDummyTasks = async (req, res) => {
+    try {
+        // First, find or create a test user
+        let testUser = await User.findOne({ email: 'test@example.com' });
+        
+        if (!testUser) {
+            testUser = await User.create({
+                name: 'Test User',
+                email: 'test@example.com',
+                password: 'Test@123', // This should be hashed in a real scenario
+                role: 'user'
+            });
+        }
 
-  // Build match condition based on filters
-  const matchCondition = {};
-  if (userId) {
-    matchCondition.assignedTo = userId;
-  }
-  if (priority) {
-    matchCondition.priority = priority;
-  }
+        const dummyTasks = [
+            {
+                title: 'Dummy Task 1 (Completed)',
+                status: 'completed',
+                description: 'Description for dummy task 1',
+                createdAt: dayjs.utc().subtract(2, 'day').toDate(),
+                dueDate: dayjs.utc().add(1, 'day').toDate(),
+                assignedTo: testUser._id
+            },
+            {
+                title: 'Dummy Task 2 (Pending)',
+                status: 'pending',
+                description: 'Description for dummy task 2',
+                createdAt: dayjs.utc().subtract(1, 'day').toDate(),
+                dueDate: dayjs.utc().add(2, 'day').toDate(),
+                assignedTo: testUser._id
+            },
+            {
+                title: 'Dummy Task 3 (In Progress)',
+                status: 'in progress',
+                description: 'Description for dummy task 3',
+                createdAt: dayjs.utc().subtract(5, 'day').toDate(),
+                dueDate: dayjs.utc().subtract(1, 'day').toDate(),
+                assignedTo: testUser._id
+            },
+            {
+                title: 'Dummy Task 4 (Completed this week)',
+                status: 'completed',
+                description: 'Description for dummy task 4',
+                createdAt: dayjs.utc().startOf('week').add(1, 'day').toDate(),
+                dueDate: dayjs.utc().endOf('week').toDate(),
+                assignedTo: testUser._id
+            },
+            {
+                title: 'Dummy Task 5 (In Progress this month)',
+                status: 'in progress',
+                description: 'Description for dummy task 5',
+                createdAt: dayjs.utc().startOf('month').add(5, 'day').toDate(),
+                dueDate: dayjs.utc().endOf('month').toDate(),
+                assignedTo: testUser._id
+            },
+            {
+  title: 'Dummy Task 6 (Matches June 3)',
+  status: 'pending',
+  description: 'Description for dummy task 6',
+  createdAt: dayjs.utc('2025-06-03T12:00:00Z').toDate(),
+  dueDate: dayjs.utc('2025-06-05T00:00:00Z').toDate(),
+  assignedTo: testUser._id
+}
 
-  // Task Status Summary
-  const taskStatusSummary = await Task.aggregate([
-    { $match: matchCondition }, // Apply filter
-    {
-      $group: {
-        _id: "$status",
-        count: { $sum: 1 }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        status: "$_id",
-        count: 1
-      }
+        ];
+
+        // Remove existing dummy tasks to avoid duplicates on multiple runs
+        await Task.deleteMany({ title: { $regex: /^Dummy Task/ } });
+
+        const createdTasks = await Task.insertMany(dummyTasks);
+
+        res.status(201).json({ 
+            message: 'Dummy tasks inserted successfully', 
+            count: createdTasks.length,
+            userId: testUser._id
+        });
+    } catch (error) {
+        console.error('Error inserting dummy tasks:', error);
+        res.status(500).json({ message: 'Error inserting dummy tasks', error: error.message });
     }
-  ]);
+};
 
-  // Task Priority Summary
-  const taskPrioritySummary = await Task.aggregate([
-    {
-      $group: {
-        _id: "$priority",
-        count: { $sum: 1 }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        priority: "$_id",
-        count: 1
-      }
-    }
-  ]);
-
-  // Overdue Tasks
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const overdueTasks = await Task.find({
-    ...matchCondition, // Apply filter
-    dueDate: { $lt: today },
-    status: { $ne: "Completed" }
-  }).populate('assignedTo', 'name email');
-
-  // User Task Summary Table
-  const userTaskSummary = await Task.aggregate([
-    { $match: matchCondition }, // Apply filter
-    {
-      $group: {
-        _id: "$assignedTo",
-        totalTasks: { $sum: 1 },
-        completedTasks: { $sum: { $cond: [{ $eq: ["$status", "Completed"] }, 1, 0] } },
-        pendingTasks: { $sum: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] } },
-        // Assuming 'In Progress' tasks are neither completed nor pending
-        inProgressTasks: { $sum: { $cond: [{ $and: [{ $ne: ["$status", "Completed"] }, { $ne: ["$status", "Pending"] }] }, 1, 0] } },
-      }
-    },
-    {
-      $lookup: {
-        from: "users", // The name of the users collection
-        localField: "_id",
-        foreignField: "_id",
-        as: "userInfo"
-      }
-    },
-    {
-      $unwind: { path: "$userInfo", preserveNullAndEmptyArrays: true }
-    },
-    {
-      $project: {
-        _id: 0,
-        userId: "$_id",
-        userName: "$userInfo.name",
-        userEmail: "$userInfo.email",
-        totalTasks: 1,
-        completedTasks: 1,
-        pendingTasks: 1,
-        inProgressTasks: 1,
-      }
-    }
-  ]);
-
-  // This Week's Task Count
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-  const thisWeeksTasksCount = await Task.countDocuments({
-    ...matchCondition, // Apply filter
-    createdAt: { $gte: oneWeekAgo }
-  });
-
-  res.status(200).json({
-    success: true,
-    taskStatusSummary,
-    taskPrioritySummary,
-    overdueTasks,
-    userTaskSummary,
-    thisWeeksTasksCount,
-  });
-});
+exports.getReportSummary = async (req, res) => {
+  // Placeholder implementation
+  res.json({ message: "Summary endpoint works!" });
+};

@@ -1,29 +1,74 @@
-/* Light Theme Variables */
+/* Frontend/tasky/src/styles/theme.css */
+
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --text-primary: #000000;
-  --text-secondary: #666666;
-  --accent-primary: #fbbf24;
-  --accent-secondary: #f59e0b;
-  --card-bg: #ffffff;
-  --card-border: #e5e7eb;
-  --sidebar-active: #fef3c7;
-  --sidebar-hover: #fef9e7;
+    /* Light Theme */
+    --bg-primary-light: #ffffff;
+    --bg-secondary-light: #f9f9f9;
+    --card-bg-light: #ffffff;
+    --card-border-light: #e0e0e0;
+    --card-shadow-light: rgba(0, 0, 0, 0.05);
+    --card-hover-shadow-light: rgba(0, 0, 0, 0.08);
+    --accent-primary-light: #f59e0b;
+    --accent-secondary-light: #fbbf24;
+    --text-primary-light: #333333;
+    --text-secondary-light: #555555;
+    --text-subtle-light: #777777;
+    --border-color-light: #eee;
+    --button-secondary-light: #f0f0f0;
+    --hover-bg-light: #fafafa;
 }
 
-/* Dark Theme Variables */
-[data-theme='dark'] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #262626;
-  --text-primary: #ffffff;
-  --text-secondary: #a3a3a3;
-  --accent-primary: #fbbf24;
-  --accent-secondary: #f59e0b;
-  --card-bg: #262626;
-  --card-border: #404040;
-  --sidebar-active: #422006;
-  --sidebar-hover: #3f2b0c;
+body.light-theme {
+    background-color: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+
+    --bg-primary: var(--bg-primary-light);
+    --bg-secondary: var(--bg-secondary-light);
+    --card-bg: var(--card-bg-light);
+    --card-border: var(--card-border-light);
+    --card-border-light: var(--card-border-light); /* For subtler borders */
+    --card-shadow: var(--card-shadow-light);
+    --card-hover-shadow: var(--card-hover-shadow-light);
+    --accent-primary: var(--accent-primary-light);
+    --accent-secondary: var(--accent-secondary-light);
+    --text-primary: var(--text-primary-light);
+    --text-secondary: var(--text-secondary-light);
+    --text-subtle: var(--text-subtle-light);
+    --border-color: var(--border-color-light);
+    --button-secondary: var(--button-secondary-light);
+    --hover-bg: var(--hover-bg-light);
+}
+
+/* Default/Fallback styles (if no theme class is applied) */
+:root {
+    /* Fallbacks to light theme defaults */
+    --bg-primary: var(--bg-primary-light);
+    --bg-secondary: var(--bg-secondary-light);
+    --card-bg: var(--card-bg-light);
+    --card-border: var(--card-border-light);
+    --card-border-light: var(--card-border-light);
+    --card-shadow: var(--card-shadow-light);
+    --card-hover-shadow: var(--card-hover-shadow-light);
+    --accent-primary: var(--accent-primary-light);
+    --accent-secondary: var(--accent-secondary-light);
+    --text-primary: var(--text-primary-light);
+    --text-secondary: var(--text-secondary-light);
+    --text-subtle: var(--text-subtle-light);
+    --border-color: var(--border-color-light);
+    --button-secondary: var(--button-secondary-light);
+    --hover-bg: var(--hover-bg-light);
+}
+
+.site-layout {
+    transition: margin-left 0.3s ease; /* Smooth transition for margin change */
+    margin-left: 250px; /* Default margin for larger screens */
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .site-layout {
+        margin-left: 0 !important; /* Remove margin on smaller screens */
+    }
 }
 
 /* Ant Design Menu Overrides */

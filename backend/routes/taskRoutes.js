@@ -11,7 +11,8 @@ const {
   getAllTasks,
   updateTask,
   deleteTask,
-  getTaskDetails
+  getTaskDetails,
+  getTaskStats
 } = require("../controllers/taskController");
 const { authenticate, authorizeRoles } = require("../middlewares/auth");
 const { isAuthenticated } = require("../middlewares/auth");
@@ -38,5 +39,6 @@ router.post("/:taskId/comments", addComment);
 router.route("/admin/task/:id").put(isAuthenticated, authorizeRoles("admin"), updateTask);
 router.route("/admin/task/:id").delete(isAuthenticated, authorizeRoles("admin"), deleteTask);
 router.route("/task/:id").get(isAuthenticated, getTaskDetails);
+router.get("/stats", getTaskStats);
 
 module.exports = router;
