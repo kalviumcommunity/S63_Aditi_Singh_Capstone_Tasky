@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Pie } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 import { Spin, Empty } from 'antd';
@@ -32,7 +32,7 @@ const PieChartComponent = ({ summary, loading, error }) => {
       completed: Number(summary?.completed) || 0,
       pending: Number(summary?.pending) || 0,
       overdue: Number(summary?.overdue) || 0,
-      inProgress: parseInt(summary?.inProgress, 10) || 0,
+      inProgress: Number(summary?.inProgress) || 0,
   };
 
   // Validate that all required values are numbers
@@ -71,7 +71,7 @@ const PieChartComponent = ({ summary, loading, error }) => {
     console.log('PieChartComponent received summary prop:', summary);
   }, [summary]);
 
-  const data = {
+  const data = useMemo(() => ({
     labels: ['Completed', 'Pending', 'Overdue', 'In Progress'],
     datasets: [
       {
@@ -91,9 +91,9 @@ const PieChartComponent = ({ summary, loading, error }) => {
         borderWidth: 1,
       },
     ],
-  };
+  }), [safeSummary.completed, safeSummary.pending, safeSummary.overdue, safeSummary.inProgress]);
 
-  const options = {
+  const options = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -118,7 +118,7 @@ const PieChartComponent = ({ summary, loading, error }) => {
         }
       }
     }
-  };
+  }), []);
 
   return (
     <div style={{ height: '300px', position: 'relative' }}>

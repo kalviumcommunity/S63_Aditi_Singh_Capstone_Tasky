@@ -49,13 +49,14 @@ const ReportsPage = () => {
   const [tasks, setTasks] = useState([]);
   const [reportData, setReportData] = useState({
     tasks: [],
-    statusData: { completed: 0, pending: 0, overdue: 0 },
+    statusData: { completed: 0, pending: 0, overdue: 0, inProgress: 0 },
     inProgressTasks: [],
   });
   const [summary, setSummary] = useState({
     completed: 0,
     pending: 0,
-    overdue: 0
+    overdue: 0,
+    inProgress: 0,
   });
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const ReportsPage = () => {
           completed: Number(fetchedReportData.statusData.completed) || 0,
           pending: Number(fetchedReportData.statusData.pending) || 0,
           overdue: Number(fetchedReportData.statusData.overdue) || 0,
-          inProgress: Number(fetchedReportData.statusData.inProgress) || 0, // Use the correct lowercase key
+          inProgress: Number(fetchedReportData.statusData.inProgress) || 0,
         });
 
       } catch (err) {
@@ -100,7 +101,8 @@ const ReportsPage = () => {
         setSummary({
           completed: 0,
           pending: 0,
-          overdue: 0
+          overdue: 0,
+          inProgress: 0,
         });
       } finally {
         setLoading(false);
@@ -143,11 +145,21 @@ const ReportsPage = () => {
             <Row gutter={16}>
               <Col xs={24} md={12}>
                 <Card title="Task Status">
-                  <PieChartComponent 
-                    summary={summary}
-                    loading={loading}
-                    error={error}
-                  />
+                  {(!loading && !error) ? (
+                    <PieChartComponent
+                      summary={summary}
+                      loading={loading}
+                      error={error}
+                    />
+                  ) : loading ? (
+                    <div style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Spin tip="Loading chart data..." />
+                    </div>
+                  ) : (
+                    <div style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Empty description="Failed to load chart data" />
+                    </div>
+                  )}
                 </Card>
               </Col>
               <Col xs={24} md={12}>

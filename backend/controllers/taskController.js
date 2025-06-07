@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const { catchAsyncErrors } = require('../middlewares/catchAsyncErrors');
 const ErrorHandler = require('../utils/errorHandler');
+const mongoose = require('mongoose'); // Import mongoose
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -16,8 +17,37 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// New function to mark tasks as overdue
+const updateOverdueTasks = async (userId = null) => {
+  const now = new Date();
+  const filter = {
+    status: 'pending',
+    dueDate: { $lt: now },
+  };
+
+  // If a userId is provided, filter overdue tasks relevant to that user
+  if (userId) {
+    filter.$or = [
+      { assignedTo: new mongoose.Types.ObjectId(userId) },
+      { createdBy: new mongoose.Types.ObjectId(userId) }
+    ];
+  }
+
+  try {
+    const result = await Task.updateMany(
+      filter,
+      { $set: { status: 'overdue' } }
+    );
+    console.log(`Marked ${result.nModified} tasks as overdue for user ${userId || 'all'}.`);
+  } catch (error) {
+    console.error('Error marking overdue tasks:', error);
+  }
+};
+
 exports.getTasksByUser = async (req, res) => {
   try {
+    // Call updateOverdueTasks before fetching tasks for user
+    await updateOverdueTasks(req.params.userId);
     const tasks = await Task.find({ assignedTo: req.params.userId })
       .populate('assignedTo', 'name email')
       .populate('createdBy', 'name email')
@@ -34,6 +64,9 @@ exports.getAllTasks = async (req, res) => {
     // Get the logged-in admin's user ID (using req.user.id)
     const adminUserId = req.user.id; // Corrected from _id to id
     console.log('Fetching tasks for admin userId:', adminUserId); // Log the user ID
+
+    // Call updateOverdueTasks for the admin before fetching all tasks
+    await updateOverdueTasks(adminUserId);
 
     // Find tasks created by the admin user
     const filter = { createdBy: adminUserId };
@@ -281,20 +314,16 @@ exports.getTaskDetails = catchAsyncErrors(async (req, res, next) => {
 // New function to get task statistics
 exports.getTaskStats = async (req, res) => {
   try {
-    const { userId } = req.query; // Get userId from query parameter
+    const userId = req.user.id; // Assuming req.user.id is correctly populated from JWT
 
-    console.log('Received userId for task stats:', userId); // Add logging
+    // Mark overdue tasks before calculating stats
+    await updateOverdueTasks(userId);
 
-    if (!userId) {
-      console.log('User ID is missing.'); // Add logging
-      return res.status(400).json({ error: 'User ID is required' });
-    }
+    const now = new Date();
 
+    // Aggregation pipeline to get task statistics
     const filter = { assignedTo: userId }; // Always filter by assignedTo
     console.log('Applying filter for task stats:', filter); // Add logging
-
-    // Get current date for overdue calculation
-    const currentDate = new Date();
 
     // Get total tasks
     const totalTasks = await Task.countDocuments(filter);
@@ -306,14 +335,13 @@ exports.getTaskStats = async (req, res) => {
     const pendingTasks = await Task.countDocuments({ ...filter, status: 'pending' });
 
     // Get in progress tasks
-const inProgressTasks = await Task.countDocuments({ ...filter, status: 'in progress' });
-
+    const inProgressTasks = await Task.countDocuments({ ...filter, status: 'in progress' });
 
     // Get overdue tasks (tasks that are pending and past due date)
     const overdueTasks = await Task.countDocuments({
       ...filter,
       status: 'pending',
-      dueDate: { $lt: currentDate }
+      dueDate: { $lt: now }
     });
 
     console.log('Fetched stats:', { totalTasks, completedTasks, pendingTasks, overdueTasks }); // Add logging
