@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, DatePicker, Select, InputNumber, Upload, Button, Space } from 'antd';
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import axios from '../api';
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -23,7 +23,7 @@ const CreateTaskModal = ({ visible, onClose, onSuccess }) => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/users/managers', {
+      const response = await axios.get('/users/managers', {
         withCredentials: true
       });
       setUsers(response.data);
@@ -34,7 +34,7 @@ const CreateTaskModal = ({ visible, onClose, onSuccess }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/tasks/all', {
+      const response = await axios.get('/tasks/all', {
         withCredentials: true
       });
       setExistingTasks(response.data);
@@ -70,7 +70,7 @@ const CreateTaskModal = ({ visible, onClose, onSuccess }) => {
         formData.append('attachments', file.originFileObj);
       });
 
-      const response = await axios.post('http://localhost:9000/api/tasks/create', formData, {
+      const response = await axios.post('/tasks/create', formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

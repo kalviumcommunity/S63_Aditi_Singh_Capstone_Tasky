@@ -2,14 +2,11 @@ import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button } from "antd";
 import { motion } from "framer-motion";
-import { useTheme } from '../contexts/ThemeContext';
-import ThemeSwitcher from './ThemeSwitcher';
 import { useAuth } from '../contexts/AuthContext';
 
 const { Header } = Layout;
 
 const Navbar = () => {
-    const { isDark } = useTheme();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
 
@@ -28,64 +25,31 @@ const Navbar = () => {
     };
 
     const menuItems = [
-        {
-            label: (
-                <motion.span
-                    whileHover={{ color: isDark ? "#fbbf24" : "#f59e0b" }}
-                    style={{ color: isDark ? "#fff" : "#1a1a1a" }}
-                >
-                    Home
-                </motion.span>
-            ),
-            key: 'home',
-            onClick: () => navigate('/')
-        },
-        {
-            label: (
-                <motion.span
-                    whileHover={{ color: isDark ? "#fbbf24" : "#f59e0b" }}
-                    style={{ color: isDark ? "#fff" : "#1a1a1a" }}
-                >
-                    About
-                </motion.span>
-            ),
-            key: 'about',
-            onClick: () => navigate('/about')
-        },
-        {
-            label: (
-                <motion.span
-                    whileHover={{ color: isDark ? "#fbbf24" : "#f59e0b" }}
-                    style={{ color: isDark ? "#fff" : "#1a1a1a" }}
-                >
-                    Features
-                </motion.span>
-            ),
-            key: "features"
-        },
-        {
-            label: (
-                <motion.span
-                    whileHover={{ color: isDark ? "#fbbf24" : "#f59e0b" }}
-                    style={{ color: isDark ? "#fff" : "#1a1a1a" }}
-                >
-                    Product
-                </motion.span>
-            ),
-            key: "product"
-        },
-        {
-            label: (
-                <motion.span
-                    whileHover={{ color: isDark ? "#fbbf24" : "#f59e0b" }}
-                    style={{ color: isDark ? "#fff" : "#1a1a1a" }}
-                >
-                    Contact
-                </motion.span>
-            ),
-            key: "contact"
-        },
+        { key: 'features', label: 'Features' },
+        { key: 'contact', label: 'Contact' },
     ];
+
+    if (user) {
+        if (user.role === 'admin') {
+            menuItems.unshift({ key: 'admin-dashboard', label: 'Admin Dashboard', onClick: () => navigate('/admin/dashboard') });
+            menuItems.splice(2, 0, { key: 'manage-users', label: 'Manage Users', onClick: () => navigate('/admin/manage-users') });
+        } else {
+            menuItems.unshift({ key: 'dashboard', label: 'Dashboard', onClick: () => navigate('/dashboard') });
+        }
+        menuItems.push({ key: 'profile', label: 'Profile', onClick: () => navigate('/profile') });
+    }
+
+    if (user) {
+        menuItems.push({
+            key: 'logout',
+            label: 'Logout',
+            onClick: logout,
+            danger: true,
+        });
+    } else {
+        menuItems.push({ key: 'login', label: 'Login', onClick: () => navigate('/login') });
+        menuItems.push({ key: 'signup', label: 'Signup', onClick: () => navigate('/signup') });
+    }
 
   return (
     <Header
@@ -96,15 +60,11 @@ const Navbar = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-                background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.8)",
+                background: "rgba(255, 255, 255, 0.8)",
         padding: "0 40px",
                 backdropFilter: "blur(10px)",
-                borderBottom: isDark 
-                    ? "1px solid rgba(255, 255, 255, 0.1)"
-                    : "1px solid rgba(0, 0, 0, 0.1)",
-                boxShadow: isDark
-                    ? "0 4px 30px rgba(0, 0, 0, 0.1)"
-                    : "0 4px 30px rgba(0, 0, 0, 0.05)"
+                borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                boxShadow: "0 4px 30px rgba(0, 0, 0, 0.05)"
       }}
     >
             <motion.div
@@ -115,7 +75,7 @@ const Navbar = () => {
           fontSize: 34,
           fontWeight: 600,
           fontFamily: "serif",
-                    color: isDark ? "#fff" : "#1a1a1a",
+                    color: "#1a1a1a",
                     cursor: "pointer",
         }}
                 whileHover={{ scale: 1.05 }}
@@ -143,27 +103,6 @@ const Navbar = () => {
                     items={menuItems}
                 />
 
-                <ThemeSwitcher />
-
-                <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    <Button
-                        type="primary"
-                        shape="round"
-                        onClick={() => navigate('/signup')}
-                        style={{
-                            background: isDark ? "#fbbf24" : "#f59e0b",
-                            borderColor: isDark ? "#fbbf24" : "#f59e0b",
-                            boxShadow: isDark
-                                ? "0 4px 14px 0 rgba(251, 191, 36, 0.39)"
-                                : "0 4px 14px 0 rgba(245, 158, 11, 0.39)"
-                        }}
-                    >
-                Sign Up
-              </Button>
-                </motion.div>
             </div>
     </Header>
   );

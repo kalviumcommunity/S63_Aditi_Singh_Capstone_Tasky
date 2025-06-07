@@ -31,14 +31,25 @@ exports.getTasksByUser = async (req, res) => {
 
 exports.getAllTasks = async (req, res) => {
   try {
-    const tasks = await Task.find()
+    // Get the logged-in admin's user ID (using req.user.id)
+    const adminUserId = req.user.id; // Corrected from _id to id
+    console.log('Fetching tasks for admin userId:', adminUserId); // Log the user ID
+
+    // Find tasks created by the admin user
+    const filter = { createdBy: adminUserId };
+    console.log('Applying filter:', filter); // Log the filter
+
+    const tasks = await Task.find(filter)
       .populate('assignedTo', 'name email')
       .populate('createdBy', 'name email')
       .populate('dependencies', 'title status');
+
+    console.log('Found tasks:', tasks.length); // Log the number of tasks found
+
     res.status(200).json(tasks);
   } catch (error) {
-    console.error('Error fetching all tasks:', error);
-    res.status(500).json({ error: 'Failed to fetch all tasks' });
+    console.error('Error fetching admin tasks:', error);
+    res.status(500).json({ error: 'Failed to fetch admin tasks' });
   }
 };
 
@@ -294,6 +305,10 @@ exports.getTaskStats = async (req, res) => {
     // Get pending tasks
     const pendingTasks = await Task.countDocuments({ ...filter, status: 'pending' });
 
+    // Get in progress tasks
+const inProgressTasks = await Task.countDocuments({ ...filter, status: 'in progress' });
+
+
     // Get overdue tasks (tasks that are pending and past due date)
     const overdueTasks = await Task.countDocuments({
       ...filter,
@@ -312,6 +327,49 @@ exports.getTaskStats = async (req, res) => {
   } catch (error) {
     console.error('Error fetching task stats:', error);
     res.status(500).json({ error: 'Failed to fetch task statistics' });
+  }
+};
+
+// New function to get admin task progress statistics (Restored and Corrected)
+exports.getAdminTaskProgress = async (req, res) => {
+  try {
+    // Get the logged-in admin's user ID (using req.user.id)
+    const adminUserId = req.user.id; // Corrected from _id to id
+
+    // Define the filter for tasks created by or assigned to the admin
+    const filter = {
+      $or: [
+        { createdBy: adminUserId },
+        { assignedTo: adminUserId }
+      ]
+    };
+
+    // Calculate overall completion
+    const totalTasks = await Task.countDocuments(filter);
+    const completedTasks = await Task.countDocuments({ ...filter, status: 'completed' });
+    const overallCompletion = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    // Calculate this week's completion
+    const startOfTodayUTC = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()));
+    const startOfWeekUTC = new Date(startOfTodayUTC);
+    startOfWeekUTC.setUTCDate(startOfTodayUTC.getUTCDate() - startOfTodayUTC.getUTCDay()); // Adjust to the start of the week (Sunday)
+
+    const weeklyFilter = {
+      ...filter,
+      createdAt: { $gte: startOfWeekUTC }
+    };
+
+    const totalWeeklyTasks = await Task.countDocuments(weeklyFilter);
+    const completedWeeklyTasks = await Task.countDocuments({ ...weeklyFilter, status: 'completed' });
+    const weeklyCompletion = totalWeeklyTasks > 0 ? Math.round((completedWeeklyTasks / totalWeeklyTasks) * 100) : 0;
+
+    res.status(200).json({
+      overallCompletion,
+      weeklyCompletion
+    });
+  } catch (error) {
+    console.error('Error fetching admin task progress:', error);
+    res.status(500).json({ error: 'Failed to fetch admin task progress' });
   }
 };
 

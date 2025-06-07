@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -11,6 +11,26 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-shadow: rgba(0, 0, 0, 0.05);
+  --card-hover-shadow: rgba(0, 0, 0, 0.08);
+  --accent-primary: #f59e0b;
+  --accent-secondary: #fbbf24;
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-subtle: #777777;
+  --border-color: #eee;
+  --button-secondary: #f0f0f0;
+  --hover-bg: #fafafa;
+
+  --sidebar-active-bg: var(--hover-bg);
+  --sidebar-hover-bg: var(--hover-bg);
+  --sidebar-active-color: var(--accent-secondary);
+  --sidebar-color: var(--text-primary);
 }
 
 a {
@@ -28,6 +48,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: 'Open Sans', sans-serif;
 }
 
 h1 {

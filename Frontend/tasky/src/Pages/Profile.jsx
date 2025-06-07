@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Card, Form, Input, Button, message, Avatar, Typography, Upload, Tabs, Space, Divider } from 'antd';
 import { UserOutlined, UploadOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
-import Sidebar from '../components/Sidebar';
-import axios from 'axios';
+import AdminSidebar from '../components/AdminSidebar';
+import axios from '../api';
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -54,7 +54,7 @@ const Profile = () => {
         formData.append('profileImage', fileList[0].originFileObj);
       }
       const response = await axios.put(
-        'http://localhost:9000/api/users/profile',
+        '/users/profile',
         formData,
         { 
           withCredentials: true,
@@ -95,7 +95,7 @@ const Profile = () => {
     setLoading(true);
     try {
       const response = await axios.put(
-        'http://localhost:9000/api/users/profile/password',
+        '/users/profile/password',
         {
           currentPassword: values.currentPassword,
           newPassword: values.newPassword
@@ -124,7 +124,7 @@ const Profile = () => {
 
   return (
     <Layout style={{ minHeight: '100vh', background: COLORS.background }}>
-      <Sidebar />
+      <AdminSidebar />
       <Layout className="site-layout">
         <Content style={{ padding: '24px', minHeight: '100vh', background: COLORS.background }}>
           <div style={{ maxWidth: 700, margin: '24px auto', padding: '24px', background: COLORS.card, borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>

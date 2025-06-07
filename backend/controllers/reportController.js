@@ -9,8 +9,16 @@ dayjs.extend(utc);
 // Generate task report based on type (daily/weekly/monthly) and user
 exports.generateReport = async (req, res) => {
   try {
-    const { type, userId } = req.params;
+    // const { type, userId } = req.params; // userId from params is no longer used for filtering authenticated requests
+    const { type } = req.params;
     const { date } = req.query; // Get date from query parameters
+
+    // Get logged-in user's ID and role from the request (set by authentication middleware)
+    const loggedInUser = req.user;
+
+    if (!loggedInUser) {
+        return res.status(401).json({ message: "User not authenticated." });
+    }
 
     let startDate;
     let endDate = dayjs.utc(date).endOf('day').toDate(); // Default end date to end of the selected day (UTC)
@@ -42,29 +50,68 @@ exports.generateReport = async (req, res) => {
             return res.status(400).json({ message: "Invalid report type" });
     }
 
-    // Build the query object
-    const tasks = await Task.find({
-      // Only filter by assignedTo if userId is not 'all'
-      ...(userId !== 'all' && { assignedTo: userId }),
-      createdAt: { 
-        $gte: startDate, 
-        $lte: endDate 
-      },
-    });
+    // Build the query object based on user role
+    const filter = {
+      $or: [
+        {
+          createdAt: { 
+            $gte: startDate, 
+            $lte: endDate 
+          }
+        },
+        {
+          dueDate: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      ]
+    };
+
+    console.log('Mongoose query filter:', filter);
+
+    // Filter by createdBy for admins, assignedTo for regular users
+    if (loggedInUser.role === 'admin') {
+        filter.createdBy = loggedInUser.id; // Filter by tasks created by the admin
+    } else {
+        filter.assignedTo = loggedInUser.id; // Filter by tasks assigned to the regular user
+    }
+
+    const tasks = await Task.find(filter)
+      .populate('assignedTo', 'name email')
+      .populate('createdBy', 'name email')
+      .populate('dependencies', 'title status');
+
+    console.log('Fetched tasks statuses:', tasks.map(task => task.status));
+
+    // Filter for in-progress tasks specifically
+    const inProgressTasks = tasks.filter(task => task.status === 'in progress');
 
     // Calculate summary data
     const statusData = tasks.reduce((acc, task) => {
-        // Assuming task has a 'status' field (e.g., 'completed', 'pending', 'overdue')
-        // Initialize status properties if they don't exist
-        if (!acc[task.status]) { acc[task.status] = 0; }
-        acc[task.status]++;
+        const validStatusMap = {
+            'completed': 'completed',
+            'pending': 'pending',
+            'overdue': 'overdue',
+            'in progress': 'inProgress', // Map lowercase status to camelCase key
+        };
+
+        const taskStatus = task.status ? task.status.toLowerCase() : '';
+        const mappedStatus = validStatusMap[taskStatus];
+
+        if (mappedStatus) {
+             acc[mappedStatus] = (acc[mappedStatus] || 0) + 1; // Increment the count for the mapped camelCase key
+        } else {
+             console.warn(`Task with unexpected status encountered (ID: ${task._id}): ${task.status}`);
+        }
         return acc;
-    }, { completed: 0, pending: 0, overdue: 0 });
+    }, { completed: 0, pending: 0, overdue: 0, inProgress: 0 }); // Initialize with camelCase key
 
     // Send the response in the expected format
     res.json({
         tasks: tasks,
-        statusData: statusData
+        statusData: statusData, // Send the directly populated statusData
+        inProgressTasks: inProgressTasks
     });
 
    } catch (error) {

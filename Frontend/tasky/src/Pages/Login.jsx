@@ -4,7 +4,6 @@ import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // For redirection
 import { useAuth } from "../contexts/AuthContext"; // Access AuthContext
-import { useTheme } from "../contexts/ThemeContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Layout } from "antd";
@@ -19,7 +18,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login, updateUser } = useAuth();
-  const { isDark } = useTheme();
 
   const onFinish = async (values) => {
     try {
@@ -57,146 +55,94 @@ const Login = () => {
   };
 
   return (
-    <Layout style={{ 
+    <Layout style={{
       minHeight: '100vh',
-      background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
-      color: 'var(--text-primary)'
+      background: 'var(--bg-secondary)',
+      display: 'flex',
+      flexDirection: 'column',
     }}>
       <Navbar />
-      <Content style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        padding: '40px 20px'
-      }}>
+      <Content style={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          style={{ width: '100%', maxWidth: 400 }}
         >
           <Card
+            bordered={false}
             style={{
-              background: isDark ? 'var(--card-bg)' : 'white',
-              border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
+              width: 400,
+              background: 'var(--card-bg)',
               borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: isDark
-                ? '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
-                : '0 4px 12px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              padding: '20px',
             }}
           >
-            <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <Title level={2} style={{ 
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <Title level={2} style={{
                 color: 'var(--text-primary)',
-                marginBottom: 8
-              }}>
-                Welcome Back
-              </Title>
-              <Text style={{ 
-                color: 'var(--text-secondary)',
-                fontSize: 16
-              }}>
-                Sign in to continue to Tasky
-              </Text>
+                marginBottom: '8px'
+              }}>Login</Title>
+              <Text style={{
+                color: 'var(--text-secondary)'
+              }}>Access your TASKY account</Text>
             </div>
-
             <Form
               name="login"
+              initialValues={{
+                remember: true,
+              }}
               onFinish={onFinish}
-              layout="vertical"
-              requiredMark={false}
             >
               <Form.Item
                 name="email"
                 rules={[
-                  { required: true, message: 'Please input your email!' },
-                  { type: 'email', message: 'Please enter a valid email!' }
+                  { required: true, message: 'Please input your Email!' },
+                  { type: 'email', message: 'Please enter a valid Email!' },
                 ]}
               >
-                <Input
-                  prefix={<MailOutlined style={{ color: 'var(--text-secondary)' }} />}
-                  placeholder="Email"
-                  size="large"
-                  style={{
-                    background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
-                    border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
-                    color: 'var(--text-primary)',
-                  }}
-                />
+                <Input prefix={<MailOutlined />} placeholder="Email" />
               </Form.Item>
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
+                rules={[
+                  { required: true, message: 'Please input your Password!' },
+                ]}
               >
-                <Input.Password
-                  prefix={<LockOutlined style={{ color: 'var(--text-secondary)' }} />}
-                  placeholder="Password"
-                  size="large"
-                  style={{
-                    background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
-                    border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
-                    color: 'var(--text-primary)',
-                  }}
-                />
+                <Input.Password prefix={<LockOutlined />} placeholder="Password" />
               </Form.Item>
 
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                  size="large"
-                  style={{
-                    backgroundColor: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-                    borderColor: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-                    boxShadow: `0 4px 14px 0 ${isDark ? 'rgba(251, 191, 36, 0.39)' : 'rgba(245, 158, 11, 0.39)'}`,
-                    height: 45,
-                    fontSize: 16,
-                    fontWeight: 500
-                  }}
-                >
-                  Sign In
+                <Button type="primary" htmlType="submit" loading={loading} style={{
+                  width: '100%',
+                  background: '#f97316',
+                  borderColor: '#f97316',
+                  boxShadow: '0 4px 14px 0 rgba(249, 115, 22, 0.39)'
+                }}>
+                  Log in
                 </Button>
               </Form.Item>
 
-              {/* Google Sign-In Button */}
-              <Button
-                block
-                size="large"
-                icon={<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style={{ width: 20, marginRight: 8 }} />}
-                style={{
-                  marginTop: 16,
-                  background: '#fff',
-                  color: '#23232a',
-                  border: '1.5px solid #fbbf24',
-                  fontWeight: 600,
-                  fontSize: 16,
-                  height: 45,
-                  boxShadow: '0 2px 8px rgba(251,191,36,0.09)'
-                }}
-                onClick={handleGoogleSignIn}
-                loading={loading}
-              >
-                Sign in with Google
-              </Button>
+              {/* Optional: Google Sign-In Button */}
+              <Form.Item>
+                 <Button type="default" onClick={handleGoogleSignIn} style={{
+                  width: '100%',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                 }}>
+                   {/* Add Google icon here if you have one */} 
+                   Sign in with Google
+                 </Button>
+              </Form.Item>
 
               <div style={{ textAlign: 'center' }}>
                 <Text style={{ color: 'var(--text-secondary)' }}>
-                  Don't have an account?{' '}
-                  <motion.span
-                    whileHover={{ color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)' }}
-                    style={{ 
-                      color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-                      cursor: 'pointer',
-                      fontWeight: 500
-                    }}
-                    onClick={() => navigate('/signup')}
-                  >
-                    Sign Up
-                  </motion.span>
+                  Or <a href="/signup">register now!</a>
                 </Text>
               </div>
             </Form>
@@ -208,5 +154,5 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login;
  

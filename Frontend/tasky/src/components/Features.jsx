@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Typography } from 'antd';
 import { motion } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeContext';
 import {
     CalendarOutlined,
     TeamOutlined,
@@ -14,8 +13,6 @@ import {
 const { Title, Text } = Typography;
 
 const Features = () => {
-    const { isDark } = useTheme();
-
     const features = [
   {
             icon: <CalendarOutlined />,
@@ -49,85 +46,48 @@ const Features = () => {
         }
     ];
 
-  return (
-        <div id="features-section" style={{ padding: '40px 0' }}>
+    return (
+        <div id="features-section" style={{ padding: '60px 0', background: '#fff' }}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                style={{ textAlign: 'center', marginBottom: 60 }}
+                style={{ textAlign: 'center', marginBottom: 40 }}
             >
-                <Title level={2} style={{ 
-                    color: 'var(--text-primary)',
-                    marginBottom: 20 
-                }}>
-                    Features that Empower Your Workflow
-        </Title>
-                <Text style={{ 
-                    fontSize: 18,
-                    color: 'var(--text-secondary)'
-                }}>
-                    Discover the tools that will transform your task management experience
-                </Text>
+                <Title level={2} style={{ color: '#333' }}>Features</Title>
+                <Text style={{ fontSize: 18, color: '#555' }}>Discover the key features that make TASKY stand out</Text>
             </motion.div>
-
-            <Row gutter={[24, 24]}>
+            <Row gutter={[24, 24]} justify="center">
                 {features.map((feature, index) => (
-                    <Col xs={24} sm={12} md={8} key={index}>
+                    <Col xs={24} sm={12} md={8} lg={8} key={index}>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            transition={{ duration: 0.6, delay: index * 0.1 }}
                             viewport={{ once: true }}
                         >
                             <Card
-                                hoverable
+                                bordered={false}
                                 style={{
-                                    height: '100%',
-                                    background: isDark ? 'var(--card-bg)' : 'var(--bg-secondary)',
-                                    border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
-                                    borderRadius: '12px',
-                                    overflow: 'hidden',
-                                }}
-                                bodyStyle={{
-                                    padding: '24px',
-                                    height: '100%',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
                                     textAlign: 'center',
+                                    padding: '20px',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    background: '#fff',
+                                    height: '100%'
                                 }}
                             >
-                                <motion.div
-                                    whileHover={{ scale: 1.1, rotate: 5 }}
-                                    style={{
-                                        fontSize: '36px',
-                                        marginBottom: '16px',
-                                        color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-                                    }}
-                                >
-                                    {feature.icon}
-                                </motion.div>
-                                <Title level={4} style={{ 
-                                    marginBottom: '12px',
-                                    color: 'var(--text-primary)'
-                                }}>
-                                    {feature.title}
-                                </Title>
-                                <Text style={{ 
-                                    color: 'var(--text-secondary)',
-                                    fontSize: '16px'
-                                }}>
-                                    {feature.description}
-                                </Text>
-            </Card>
+                                <div style={{ fontSize: '40px', color: '#f59e0b', marginBottom: '16px' }}>{feature.icon}</div>
+                                <Title level={4} style={{ color: '#333' }}>{feature.title}</Title>
+                                <Text style={{ color: '#555' }}>{feature.description}</Text>
+                            </Card>
                         </motion.div>
-          </Col>
-        ))}
-      </Row>
-    </div>
-  );
+                    </Col>
+                ))}
+            </Row>
+        </div>
+    );
 };
 
 export default Features;

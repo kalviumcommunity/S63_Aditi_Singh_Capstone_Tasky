@@ -9,7 +9,7 @@ import {
   SunOutlined,
   MoonOutlined
 } from '@ant-design/icons';
-import axios from 'axios';
+import axios from '../api';
 import AdminSidebar from '../components/AdminSidebar';
 import '../styles/AdminDashboard.css';
 import CreateTaskModal from '../components/CreateTaskModal';
@@ -26,32 +26,24 @@ const AdminDashboard = () => {
     totalUsers: 7
   });
   const [recentActivity, setRecentActivity] = useState([]);
-  const [isDark, setIsDark] = useState(false);
   const [isCreateTaskModalVisible, setIsCreateTaskModalVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [taskProgress, setTaskProgress] = useState({
+    overallCompletion: 0,
+    weeklyCompletion: 0
+  });
   const { isAdmin } = useAuth();
 
   useEffect(() => {
     fetchStats();
     fetchRecentActivity();
     fetchTasks();
-    // Load theme preference from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      setIsDark(true);
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
+    fetchTaskProgress();
   }, []);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.setAttribute('data-theme', !isDark ? 'dark' : 'light');
-    localStorage.setItem('theme', !isDark ? 'dark' : 'light');
-  };
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/admin/stats', {
+      const response = await axios.get('/admin/stats', {
         withCredentials: true
       });
       setStats(response.data);
@@ -62,7 +54,7 @@ const AdminDashboard = () => {
 
   const fetchRecentActivity = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/admin/recent-activity', {
+      const response = await axios.get('/admin/recent-activity', {
         withCredentials: true
       });
       setRecentActivity(response.data);
@@ -73,12 +65,27 @@ const AdminDashboard = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/tasks/all', {
+      const response = await axios.get('/tasks/all', {
         withCredentials: true
       });
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
+    }
+  };
+
+  const fetchTaskProgress = async () => {
+    try {
+      const response = await axios.get('/admin/task-progress', {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setTaskProgress(response.data);
+    } catch (error) {
+      console.error('Error fetching task progress:', error);
+      setTaskProgress({ overallCompletion: 0, weeklyCompletion: 0 });
     }
   };
 
@@ -163,7 +170,7 @@ const AdminDashboard = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:9000/api/tasks/admin/task/${taskId}`, {
+      await axios.delete(`/tasks/admin/task/${taskId}`, {
         withCredentials: true,
       });
       message.success('Task deleted successfully');
@@ -185,13 +192,6 @@ const AdminDashboard = () => {
               <Text className="header-subtitle">Welcome back! Here's what's happening</Text>
             </div>
             <div className="header-right">
-              <Switch
-                checked={isDark}
-                onChange={toggleTheme}
-                checkedChildren={<MoonOutlined />}
-                unCheckedChildren={<SunOutlined />}
-                className="theme-switch"
-              />
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />}
@@ -274,10 +274,10 @@ const AdminDashboard = () => {
                 <div className="progress-item">
                   <div className="progress-info">
                     <Text>Overall Completion</Text>
-                    <Text strong>70%</Text>
+                    <Text strong>{taskProgress.overallCompletion}%</Text>
                   </div>
                   <Progress 
-                    percent={70} 
+                    percent={taskProgress.overallCompletion}
                     strokeColor="var(--primary-orange)"
                     trailColor="rgba(249, 115, 22, 0.1)"
                   />
@@ -285,10 +285,10 @@ const AdminDashboard = () => {
                 <div className="progress-item">
                   <div className="progress-info">
                     <Text>This Week's Progress</Text>
-                    <Text strong>85%</Text>
+                    <Text strong>{taskProgress.weeklyCompletion}%</Text>
                   </div>
                   <Progress 
-                    percent={85} 
+                    percent={taskProgress.weeklyCompletion}
                     strokeColor="var(--primary-orange)"
                     trailColor="rgba(249, 115, 22, 0.1)"
                   />

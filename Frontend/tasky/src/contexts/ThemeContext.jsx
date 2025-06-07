@@ -3,12 +3,13 @@ import React, { createContext, useContext } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const isDark = false; // Set isDark to a fixed false
+  // isDark is always false to enforce light theme
+  const isDark = false;
 
-  // Removed useEffect and toggleTheme
+  // No theme toggling or loading from localStorage
 
   return (
-    <ThemeContext.Provider value={{ isDark }}> {/* Only provide isDark */}
+    <ThemeContext.Provider value={{ isDark }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Card, Row, Col, Statistic, Typography, List, Tag, Progress, Spin, Space, Modal, Button, Select, message, Divider } from 'antd';
 import { CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined, CalendarOutlined, LoadingOutlined, PaperClipOutlined, UserOutlined, BarChartOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import axios from '../api';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
 import '../styles/theme.css';
@@ -105,13 +105,13 @@ const Dashboard = () => {
 
       setLoading(true);
       const [statsResponse, tasksResponse] = await Promise.all([
-        axios.get(`http://localhost:9000/api/tasks/stats?userId=${userId}`, { 
+        axios.get(`/tasks/stats?userId=${userId}`, { 
           withCredentials: true,
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }),
-        axios.get(`http://localhost:9000/api/tasks/user/${userId}`, { 
+        axios.get(`/tasks/user/${userId}`, { 
           withCredentials: true,
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -141,7 +141,7 @@ const Dashboard = () => {
   const fetchTaskDetails = async (taskId) => {
     setModalLoading(true);
     try {
-      const response = await axios.get(`http://localhost:9000/api/tasks/task/${taskId}`, { withCredentials: true });
+      const response = await axios.get(`/tasks/task/${taskId}`, { withCredentials: true });
       setSelectedTask(response.data.task);
       setIsModalVisible(true);
     } catch (error) {
@@ -169,7 +169,7 @@ const Dashboard = () => {
     try {
       setSelectedTask(prevTask => ({ ...prevTask, status }));
 
-      await axios.put(`http://localhost:9000/api/tasks/status/${selectedTask._id}`, { status }, { withCredentials: true });
+      await axios.put(`/tasks/status/${selectedTask._id}`, { status }, { withCredentials: true });
       message.success(`Task status updated to ${status}.`);
 
       fetchDashboardData();

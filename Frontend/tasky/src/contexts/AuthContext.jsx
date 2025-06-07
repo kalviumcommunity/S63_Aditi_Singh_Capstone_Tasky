@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api';
 
 // Create the Auth Context
 const AuthContext = createContext();
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/users/profile', {
+      const response = await axios.get('/users/profile', {
         withCredentials: true
       });
       setUser(response.data.user);
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:9000/api/users/login', {
+      const response = await axios.post('/users/login', {
         email,
         password
       }, { withCredentials: true });
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:9000/api/users/logout', {}, { withCredentials: true });
+      await axios.post('/users/logout', {}, { withCredentials: true });
       setUser(null);
       setIsAuthenticated(false);
       navigate('/login');
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post('http://localhost:9000/api/users/register', userData, {
+      const response = await axios.post('/users/register', userData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

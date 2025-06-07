@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { UserOutlined, BulbOutlined, BulbFilled } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import axios from '../api';
 
 export default function UserNavbar() {
   const { user } = useAuth();
-  const [darkMode, setDarkMode] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [users, setUsers] = useState([]); // Default to empty array
   const [loadingUsers, setLoadingUsers] = useState(true);
@@ -21,14 +20,14 @@ export default function UserNavbar() {
   });
 
   useEffect(() => {
-    document.body.style.backgroundColor = darkMode ? '#1e1e1e' : '#fff';
-    document.body.style.color = darkMode ? '#f5f5f5' : '#000';
-  }, [darkMode]);
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get('/api/users/users');
+        const res = await axios.get('/api/users/managers', {
+          withCredentials: true
+        });
         // Check if response is array or object with `users` array
         const userList = Array.isArray(res.data) ? res.data : res.data.users;
         setUsers(userList || []);
@@ -61,10 +60,10 @@ export default function UserNavbar() {
 
   return (
     <>
-      <nav style={{ ...styles.navbar, background: darkMode ? '#2c2c2c' : '#fff', color: darkMode ? '#f5f5f5' : '#000' }}>
+      <nav style={{ ...styles.navbar, background: '#fff', color: '#000' }}>
         <div style={styles.titleWrapper}>
           <h1 style={styles.title}>Dashboard</h1>
-          <span style={{ ...styles.userTag, color: darkMode ? '#bbb' : '#777' }}>{user?.role}</span>
+          <span style={{ ...styles.userTag, color: '#777' }}>{user?.role}</span>
         </div>
 
         <div style={styles.iconWrapper}>
@@ -74,20 +73,8 @@ export default function UserNavbar() {
             </button>
           )}
 
-          <div
-            style={{ ...styles.circleIcon, background: darkMode ? '#444' : '#f9f9f9' }}
-            onClick={() => setDarkMode(prev => !prev)}
-            title="Toggle Night Mode"
-          >
-            {darkMode ? (
-              <BulbFilled style={{ fontSize: '16px', color: '#facc15' }} />
-            ) : (
-              <BulbOutlined style={{ fontSize: '16px', color: '#555' }} />
-            )}
-          </div>
-
-          <div style={{ ...styles.circleIcon, background: darkMode ? '#444' : '#f9f9f9' }}>
-            <UserOutlined style={{ fontSize: '18px', color: darkMode ? '#ddd' : '#333' }} />
+          <div style={{ ...styles.circleIcon, background: '#f9f9f9' }}>
+            <UserOutlined style={{ fontSize: '18px', color: '#333' }} />
           </div>
         </div>
       </nav>

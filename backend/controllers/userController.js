@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const bcrypt = require('bcrypt');
 const fs = require('fs').promises;
+const TeamMember = require("../models/TeamMember");
 
 exports.getAllUsers = async (req, res) => {
   const users = await User.find();
@@ -11,11 +12,29 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getManagerUsers = async (req, res) => {
   try {
-    const users = await User.find({ role: 'manager' }).select('name email');
+    // Get the logged-in admin's user ID
+    const adminId = req.user.id; // Use req.user.id as corrected earlier
+    console.log('Fetching assignable users for adminId:', adminId); // Log admin ID
+
+    // Find all team members associated with this admin
+    const teamMembers = await TeamMember.find({ adminId });
+    console.log('Found team members for admin:', teamMembers.length); // Log number of team members
+
+    // Extract the user IDs of the team members
+    const teamMemberUserIds = teamMembers.map(member => member.userId);
+
+    // Find the users whose IDs are in the list of team member user IDs
+    // Exclude the admin themselves and include users with 'user' or 'manager' roles
+    const users = await User.find({
+      _id: { $in: teamMemberUserIds, $ne: adminId },
+      role: { $in: ['user', 'manager'] } // Include both 'user' and 'manager' roles
+    }).select('name email');
+    console.log('Found assignable users:', users.length); // Log number of assignable users
+
     res.json(users);
   } catch (error) {
-    console.error('Error fetching manager users:', error);
-    res.status(500).json({ message: 'Error fetching manager users' });
+    console.error('Error fetching assignable users:', error);
+    res.status(500).json({ message: 'Error fetching assignable users' });
   }
 };
 

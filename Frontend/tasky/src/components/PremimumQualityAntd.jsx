@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Col, Typography, Card } from 'antd';
 import { motion } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeContext';
 import {
     RocketOutlined,
     ThunderboltOutlined,
@@ -12,9 +11,7 @@ import {
 const { Title, Text } = Typography;
 
 const PremiumQualityAntd = () => {
-    const { isDark } = useTheme();
-
-const features = [
+    const features = [
         {
             icon: <RocketOutlined />,
             title: "Lightning Fast",
@@ -40,7 +37,7 @@ const features = [
   return (
         <div style={{ 
             padding: '60px 0',
-            background: isDark ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+            background: 'var(--bg-secondary)',
             position: 'relative',
             overflow: 'hidden'
         }}>
@@ -51,9 +48,7 @@ const features = [
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: isDark 
-                    ? 'linear-gradient(45deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1))'
-                    : 'linear-gradient(45deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05))',
+                background: 'linear-gradient(45deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05))',
                 zIndex: 0
             }} />
 
@@ -72,9 +67,7 @@ const features = [
                 <Title level={2} style={{ 
                     color: 'var(--text-primary)',
                     marginBottom: 20,
-                    textShadow: isDark 
-                        ? '0 2px 4px rgba(0,0,0,0.3)'
-                        : '0 2px 4px rgba(0,0,0,0.1)'
+                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
                     Premium Quality Experience
                 </Title>
@@ -90,7 +83,7 @@ const features = [
 
             <Row gutter={[24, 24]} justify="center" style={{ position: 'relative', zIndex: 1 }}>
                 {features.map((feature, index) => (
-                    <Col xs={24} sm={12} md={6} key={index}>
+                    <Col xs={24} sm={12} md={6} key={index} style={{ display: 'flex', flexDirection: 'column' }}>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -101,13 +94,11 @@ const features = [
                                 hoverable
                                 style={{
                                     height: '100%',
-                                    background: isDark ? 'var(--card-bg)' : 'white',
-                                    border: `1px solid ${isDark ? 'var(--card-border)' : 'rgba(0, 0, 0, 0.1)'}`,
+                                    background: 'white',
+                                    border: '1px solid rgba(0, 0, 0, 0.1)',
                                     borderRadius: '12px',
                                     overflow: 'hidden',
-                                    boxShadow: isDark
-                                        ? '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
-                                        : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
                                     transition: 'all 0.3s ease'
                                 }}
                                 bodyStyle={{
@@ -124,8 +115,8 @@ const features = [
                                     style={{
                                         fontSize: '36px',
                                         marginBottom: '16px',
-                                        color: isDark ? 'var(--accent-primary)' : 'var(--accent-secondary)',
-                                        filter: isDark ? 'none' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                                        color: 'var(--accent-secondary)',
+                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                                     }}
                                 >
                                     {feature.icon}
@@ -140,16 +131,17 @@ const features = [
                                 <Text style={{ 
                                     color: 'var(--text-secondary)',
                                     fontSize: '16px',
-                                    lineHeight: 1.6
+                                    lineHeight: 1.6,
+                                    flexGrow: 1
                                 }}>
                                     {feature.description}
                                 </Text>
                             </Card>
                         </motion.div>
-          </Col>
+                    </Col>
                 ))}
-        </Row>
-    </div>
+            </Row>
+        </div>
   );
 };
 

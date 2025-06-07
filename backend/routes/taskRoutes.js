@@ -29,16 +29,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/user/:userId", getTasksByUser);
+router.get("/user/:userId", authenticate, getTasksByUser);
 router.get("/all", authenticate, authorizeRoles("admin"), getAllTasks);
 router.post("/create", isAuthenticated, authorizeRoles("admin"), upload.none(), createTask);
 router.post("/assign", assignTask);
-router.put("/status/:taskId", updateTaskStatus);
+router.put("/status/:taskId", authenticate, updateTaskStatus);
 router.post("/:taskId/attachments", upload.single('file'), addAttachment);
 router.post("/:taskId/comments", addComment);
 router.route("/admin/task/:id").put(isAuthenticated, authorizeRoles("admin"), updateTask);
 router.route("/admin/task/:id").delete(isAuthenticated, authorizeRoles("admin"), deleteTask);
 router.route("/task/:id").get(isAuthenticated, getTaskDetails);
-router.get("/stats", getTaskStats);
+router.get("/stats", authenticate, getTaskStats);
 
 module.exports = router;

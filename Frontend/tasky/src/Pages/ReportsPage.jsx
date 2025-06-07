@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Select, DatePicker, Spin, Row, Col, Card, message, Empty, Layout } from 'antd';
+import { Select, DatePicker, Spin, Row, Col, Card, message, Empty, Layout, Table } from 'antd';
 import CalendarView from '../components/CalendarView';
 import PieChartComponent from '../components/PieChartComponent';
 import AdminSidebar from '../components/AdminSidebar';
-import axios from 'axios';
+import axios from '../api';
 import dayjs from 'dayjs';
-
 
 import utc from 'dayjs/plugin/utc';
 
@@ -13,6 +12,27 @@ dayjs.extend(utc);
 
 const { Option } = Select;
 const { Content } = Layout;
+
+// Define columns for in-progress tasks table
+const inProgressTaskColumns = [
+  {
+    title: 'Title',
+    dataIndex: 'title',
+    key: 'title',
+  },
+  {
+    title: 'Due Date',
+    dataIndex: 'dueDate',
+    key: 'dueDate',
+    render: (dueDate) => dueDate ? dayjs.utc(dueDate).format('YYYY-MM-DD') : 'N/A',
+  },
+  {
+    title: 'Assigned To',
+    dataIndex: ['assignedTo', 'name'],
+    key: 'assignedTo',
+    render: (assignedTo) => assignedTo ? assignedTo.name : 'Unassigned',
+  },
+];
 
 // Define report types as constants
 const REPORT_TYPES = {
@@ -27,6 +47,11 @@ const ReportsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [reportData, setReportData] = useState({
+    tasks: [],
+    statusData: { completed: 0, pending: 0, overdue: 0 },
+    inProgressTasks: [],
+  });
   const [summary, setSummary] = useState({
     completed: 0,
     pending: 0,
@@ -38,26 +63,34 @@ const ReportsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const userId = 'all'; // Change to actual user or keep 'all' for admin
-        // Use dayjs with UTC for timezone awareness
         const dateParam = dayjs(selectedDate).utc().toISOString();
-        const res = await axios.get(`http://localhost:9000/api/reports/${reportType}/${userId}?date=${dateParam}`);
+        const res = await axios.get(`/reports/${reportType}?date=${dateParam}`);
         
-        // Validate the response data
+        console.log('Report API response data:', res.data);
+
+        // Validate the response data and set reportData state
         if (!res.data || typeof res.data !== 'object') {
           throw new Error('Invalid response format from server');
         }
 
-        // Ensure the statusData has the required properties
-        const statusData = res.data.statusData || {};
-        const validatedSummary = {
-          completed: Number(statusData.completed) || 0,
-          pending: Number(statusData.pending) || 0,
-          overdue: Number(statusData.overdue) || 0
+        // Ensure the statusData and inProgressTasks are present
+        const fetchedReportData = {
+          tasks: Array.isArray(res.data.tasks) ? res.data.tasks : [],
+          statusData: res.data.statusData || {},
+          inProgressTasks: Array.isArray(res.data.inProgressTasks) ? res.data.inProgressTasks : [],
         };
 
-        setTasks(Array.isArray(res.data.tasks) ? res.data.tasks : []);
-        setSummary(validatedSummary);
+        setReportData(fetchedReportData);
+        setTasks(fetchedReportData.tasks);
+
+        // Construct and set summary with explicit keys
+        setSummary({
+          completed: Number(fetchedReportData.statusData.completed) || 0,
+          pending: Number(fetchedReportData.statusData.pending) || 0,
+          overdue: Number(fetchedReportData.statusData.overdue) || 0,
+          inProgress: Number(fetchedReportData.statusData.inProgress) || 0, // Use the correct lowercase key
+        });
+
       } catch (err) {
         console.error('Error fetching report data:', err);
         setError(err.message || 'Failed to fetch report data');

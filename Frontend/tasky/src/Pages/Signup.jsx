@@ -28,7 +28,7 @@ import Footer from "../components/Footer";
 import { Layout } from "antd";
 import { auth, googleProvider } from '../../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import axios from 'axios';
+import axios from '../api';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -84,10 +84,10 @@ const Signup = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       // Check if user exists in backend
-      const checkRes = await axios.post('http://localhost:9000/api/users/check-google', { email: user.email });
+      const checkRes = await axios.post('/users/check-google', { email: user.email });
       if (checkRes.data.exists) {
         // User exists, log them in
-        const loginRes = await axios.post('http://localhost:9000/api/users/google-login', { email: user.email });
+        const loginRes = await axios.post('/users/google-login', { email: user.email });
         const userData = loginRes.data.user;
         updateUser(userData);
         message.success('Welcome back!');

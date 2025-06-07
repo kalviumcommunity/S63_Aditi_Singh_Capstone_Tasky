@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 import { Spin, Empty } from 'antd';
@@ -23,11 +23,17 @@ const PieChartComponent = ({ summary, loading, error }) => {
   const defaultSummary = {
     completed: 0,
     pending: 0,
-    overdue: 0
+    overdue: 0,
+    inProgress: 0,
   };
 
-  // Use the provided summary or default values
-  const safeSummary = summary || defaultSummary;
+  // Use the provided summary or default values, ensuring all expected properties are present
+  const safeSummary = {
+      completed: Number(summary?.completed) || 0,
+      pending: Number(summary?.pending) || 0,
+      overdue: Number(summary?.overdue) || 0,
+      inProgress: parseInt(summary?.inProgress, 10) || 0,
+  };
 
   // Validate that all required values are numbers
   const isValidData = Object.values(safeSummary).every(value => typeof value === 'number');
@@ -50,6 +56,7 @@ const PieChartComponent = ({ summary, loading, error }) => {
 
   if (!isValidData) {
     console.warn('PieChartComponent: Invalid data structure received', safeSummary);
+    console.log('Pie chart safeSummary data:', safeSummary);
     return (
       <div style={{ height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Empty description="Invalid data format" />
@@ -57,20 +64,29 @@ const PieChartComponent = ({ summary, loading, error }) => {
     );
   }
 
+  console.log('Pie chart safeSummary data:', safeSummary);
+
+  // Log the incoming summary prop
+  useEffect(() => {
+    console.log('PieChartComponent received summary prop:', summary);
+  }, [summary]);
+
   const data = {
-    labels: ['Completed', 'Pending', 'Overdue'],
+    labels: ['Completed', 'Pending', 'Overdue', 'In Progress'],
     datasets: [
       {
-        data: [safeSummary.completed, safeSummary.pending, safeSummary.overdue],
+        data: [safeSummary.completed, safeSummary.pending, safeSummary.overdue, safeSummary.inProgress],
         backgroundColor: [
           '#52c41a', // Completed - green
           '#faad14', // Pending - yellow
           '#ff4d4f', // Overdue - red
+          '#1890ff', // In Progress - blue (Ant Design default blue)
         ],
         borderColor: [
           '#52c41a',
           '#faad14',
           '#ff4d4f',
+          '#1890ff', // Border color for In Progress
         ],
         borderWidth: 1,
       },
@@ -115,7 +131,8 @@ PieChartComponent.propTypes = {
   summary: PropTypes.shape({
     completed: PropTypes.number,
     pending: PropTypes.number,
-    overdue: PropTypes.number
+    overdue: PropTypes.number,
+    inProgress: PropTypes.number,
   }),
   loading: PropTypes.bool,
   error: PropTypes.oneOfType([
@@ -129,7 +146,8 @@ PieChartComponent.defaultProps = {
   summary: {
     completed: 0,
     pending: 0,
-    overdue: 0
+    overdue: 0,
+    inProgress: 0,
   },
   loading: false,
   error: null

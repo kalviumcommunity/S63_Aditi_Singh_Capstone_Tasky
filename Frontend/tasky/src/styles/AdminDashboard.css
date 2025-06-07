@@ -31,22 +31,7 @@
   --icon-users: var(--primary-orange);
 }
 
-/* Dark Theme */
-[data-theme='dark'] {
-  --bg-main: #1a1c23;
-  --bg-content: #1f2937;
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
-  --table-header-bg: #111827;
-  --table-hover-bg: #1f2937;
-  
-  /* Card Background Colors */
-  --card-bg-tasks: rgba(249, 115, 22, 0.05);
-  --card-bg-completed: rgba(249, 115, 22, 0.1);
-  --card-bg-progress: rgba(249, 115, 22, 0.15);
-  --card-bg-users: rgba(249, 115, 22, 0.2);
-}
+/* Removed Dark Theme styles */
 
 /* Theme Toggle Button */
 .theme-switch {
@@ -103,55 +88,16 @@
   gap: 16px;
 }
 
-/* Create Task Button */
-.create-task-btn {
-  background: var(--primary-orange) !important;
-  border: none !important;
-  border-radius: var(--button-border-radius) !important;
-  height: 40px;
-  padding: 0 20px !important;
-  font-weight: 500;
-  color: white !important;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
-  transition: all var(--transition-speed);
-}
-
-.create-task-btn:hover {
-  background: var(--dark-orange) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
-}
-
-/* Stat Cards */
+/* Stats Cards */
 .stat-card {
-  border-radius: var(--card-border-radius) !important;
-  border: none !important;
-  height: 100%;
-  transition: all var(--transition-speed);
-  overflow: hidden;
+    border-radius: var(--card-border-radius) !important;
+    background-color: var(--bg-content) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05) !important;
+    transition: transform var(--transition-speed) ease !important;
 }
 
-.stat-card:nth-child(1) {
-  background: var(--card-bg-tasks) !important;
-}
-
-.stat-card:nth-child(2) {
-  background: var(--card-bg-completed) !important;
-}
-
-.stat-card:nth-child(3) {
-  background: var(--card-bg-progress) !important;
-}
-
-.stat-card:nth-child(4) {
-  background: var(--card-bg-users) !important;
-}
-
-.stat-card .ant-card-body {
-  padding: 20px;
+.stat-card:hover {
+    transform: translateY(-5px) !important;
 }
 
 .stat-content {
@@ -161,9 +107,7 @@
 }
 
 .stat-icon {
-  font-size: 20px;
-  display: flex;
-  align-items: center;
+  font-size: 24px;
 }
 
 .stat-info {
@@ -172,132 +116,133 @@
 }
 
 .stat-value {
-  font-size: 28px !important;
+  font-size: 20px !important;
   font-weight: 600 !important;
   color: var(--text-primary) !important;
-  line-height: 1 !important;
-  margin-bottom: 4px !important;
 }
 
 .stat-title {
-  color: var(--text-secondary) !important;
   font-size: 14px !important;
-  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
 }
 
-/* Activity & Progress Cards */
-.activity-card,
+/* Task Progress Card */
 .progress-card {
-  border-radius: var(--card-border-radius) !important;
-  border: 1px solid #f1f5f9 !important;
-  background: var(--bg-content) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: var(--card-border-radius) !important;
+    background-color: var(--bg-content) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
-.activity-card .ant-card-head,
-.progress-card .ant-card-head {
-  background: transparent !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-  padding: 16px 24px;
-  min-height: 60px;
-}
-
-.activity-card .ant-card-head-title,
-.progress-card .ant-card-head-title {
-  color: var(--text-primary) !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-}
-
-/* Table */
-.custom-table {
-  background: transparent !important;
-}
-
-.custom-table .ant-table {
-  background: transparent !important;
-}
-
-.custom-table .ant-table-thead > tr > th {
-  background: #f8fafc !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-  color: var(--text-secondary) !important;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 12px 24px;
-}
-
-.custom-table .ant-table-tbody > tr > td {
-  border-bottom: 1px solid #f1f5f9 !important;
-  color: var(--text-primary) !important;
-  padding: 12px 24px;
-  font-size: 14px;
-}
-
-.custom-table .ant-table-tbody > tr:hover > td {
-  background: #f8fafc !important;
-}
-
-.custom-table .ant-empty-description {
-  color: var(--text-secondary) !important;
-}
-
-/* Progress Section */
 .progress-item {
-  margin-top: 24px;
-  padding: 0 12px;
-}
-
-.progress-item:first-child {
-  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .progress-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.progress-info .ant-typography {
-  color: var(--text-secondary) !important;
+  margin-bottom: 8px;
   font-size: 14px;
-  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .progress-info strong {
+  color: var(--text-primary);
+}
+
+/* All Tasks Table */
+.tasks-card .ant-card-body {
+  padding: 0 !important; /* Remove padding from card body to make table full width */
+}
+
+.tasks-card .ant-table-wrapper {
+  border-radius: var(--card-border-radius) !important;
+  overflow: hidden; /* Ensure rounded corners for the table */
+}
+
+.tasks-card .ant-table-thead > tr > th {
+  background-color: var(--table-header-bg) !important;
   color: var(--text-primary) !important;
-  font-weight: 600;
+  font-weight: 600 !important;
 }
 
-/* Update Progress Bar Colors */
-.ant-progress-bg {
-  background: var(--primary-orange) !important;
+.tasks-card .ant-table-tbody > tr > td {
+    color: var(--text-primary) !important;
 }
 
-/* Layout background */
-.ant-layout {
-  background: var(--bg-main) !important;
+.tasks-card .ant-table-tbody > tr:hover > td {
+  background-color: var(--table-hover-bg) !important;
+}
+
+.tasks-card .ant-table-cell {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.tasks-card .ant-table {
+    background: var(--bg-content) !important;
+    color: var(--text-primary) !important;
+}
+
+.tasks-card .ant-table-pagination.ant-pagination {
+    margin: 16px !important;
+    justify-content: flex-end;
+}
+
+.tasks-card .ant-empty-description {
+    color: var(--text-secondary) !important;
+}
+
+/* Create Task Button */
+.create-task-btn {
+    border-radius: var(--button-border-radius) !important;
+}
+
+/* Ant Design Menu Overrides for Sidebar */
+.ant-menu-inline.ant-menu-light {
+  border-right: none;
+}
+
+.ant-menu-light .ant-menu-item {
+    color: var(--sidebar-color);
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  background-color: var(--sidebar-active-bg) !important;
+  color: var(--sidebar-active-color) !important;
+}
+
+.ant-menu-light .ant-menu-item:hover {
+  background-color: var(--sidebar-hover-bg) !important;
+  color: var(--sidebar-color) !important; /* Keep text color consistent on hover */
+}
+
+.ant-menu-light .ant-menu-item .anticon {
+    color: inherit; /* Icons inherit color from the text */
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-content {
-    margin: 16px;
-    padding: 16px;
+    margin: 12px;
+    padding: 12px;
   }
 
   .dashboard-header {
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .header-left {
+    text-align: center;
+    margin-bottom: 16px;
   }
 
   .header-right {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .stat-card {
-    margin-bottom: 16px;
+    width: 100%;
   }
 } 
