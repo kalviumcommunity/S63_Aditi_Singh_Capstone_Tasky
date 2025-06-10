@@ -17,7 +17,11 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ credentials: true, origin: 'http://localhost:5173', allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:5173', 'https://xzc.netlify.app/'], // Replace with your actual Netlify domain
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.use(cookieParser());
