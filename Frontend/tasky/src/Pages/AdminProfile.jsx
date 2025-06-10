@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Card, Form, Input, Button, message, Avatar, Typography, Upload, Tabs, Space, Divider } from 'antd';
 import { UserOutlined, UploadOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
-import Sidebar from '../components/Sidebar';
+import AdminSidebar from '../components/AdminSidebar';
 import axios from '../api';
 
 const { Content } = Layout;
@@ -27,7 +27,7 @@ const COLORS = {
   hover: '#f1f5f9',        // Hover state
 };
 
-const Profile = () => {
+const AdminProfile = () => {
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
   const { user, updateUser } = useAuth();
@@ -124,8 +124,8 @@ const Profile = () => {
 
   return (
     <Layout style={{ minHeight: '100vh', background: COLORS.background }}>
-      <Sidebar />
-      <Layout className="site-layout">
+      <AdminSidebar />
+      <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Content style={{ padding: '24px', minHeight: '100vh', background: COLORS.background }}>
           <div style={{ maxWidth: 700, margin: '24px auto', padding: '24px', background: COLORS.card, borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
             <Title level={2} style={{ 
@@ -182,10 +182,10 @@ const Profile = () => {
               <TabPane tab="Profile" key="profile">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '32px' }}>
                   <Avatar
-                    size={120} // Larger avatar
+                    size={120}
                     src={imageUrl ? `http://localhost:9000${imageUrl}` : undefined}
-                    icon={!imageUrl && <UserOutlined style={{ fontSize: '60px' }} />} // Larger icon
-                    style={{ marginBottom: '16px', border: `4px solid ${COLORS.primary}`, background: COLORS.border }} // Thicker border
+                    icon={!imageUrl && <UserOutlined style={{ fontSize: '60px' }} />}
+                    style={{ marginBottom: '16px', border: `4px solid ${COLORS.primary}`, background: COLORS.border }}
                   />
                   <Upload
                     listType="picture-circle"
@@ -196,17 +196,17 @@ const Profile = () => {
                     style={{ marginBottom: 0 }}
                   >
                     <Button 
-                      icon={<UploadOutlined style={{ fontSize: '16px' }} />} // Icon size
+                      icon={<UploadOutlined style={{ fontSize: '16px' }} />}
                       shape="circle"
                       style={{ 
-                        marginTop: -45, // Adjust position
-                        marginLeft: 80, // Adjust position
+                        marginTop: -45,
+                        marginLeft: 80,
                         background: COLORS.primary,
                         color: COLORS.card,
                         border: 'none',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        width: '36px', // Adjust size
-                        height: '36px', // Adjust size
+                        width: '36px',
+                        height: '36px',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -216,7 +216,7 @@ const Profile = () => {
                   <Text style={{ color: COLORS.text.secondary, marginTop: '8px', fontSize: '14px' }}>Upload a new profile photo</Text>
                 </div>
 
-                <Divider style={{ margin: '0 0 24px 0', borderColor: COLORS.border }} /> {/* Divider */}
+                <Divider style={{ margin: '0 0 24px 0', borderColor: COLORS.border }} />
 
                 <Form
                   form={form}
@@ -228,11 +228,11 @@ const Profile = () => {
                     name="name"
                     label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Full Name</span>}
                     rules={[{ required: true, message: 'Please input your name!' }]}
-                    style={{ marginBottom: '16px' }} // Adjusted margin
+                    style={{ marginBottom: '16px' }}
                   >
                     <Input 
                       size="large"
-                      prefix={<UserOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />} // Icon size
+                      prefix={<UserOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />}
                       style={{ 
                         background: COLORS.background,
                         border: `1px solid ${COLORS.border}`,
@@ -249,18 +249,17 @@ const Profile = () => {
                     label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Email Address</span>}
                     rules={[
                       { required: true, message: 'Please input your email!' },
-                      { type: 'email', message: 'Please enter a valid email!' }
+                      { type: 'email', message: 'Please enter a valid email!' },
                     ]}
-                    style={{ marginBottom: '16px' }} // Adjusted margin
+                    style={{ marginBottom: '16px' }}
                   >
                     <Input 
                       size="large"
-                      prefix={<MailOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />} // Icon size
-                      disabled 
-                      style={{
+                      prefix={<MailOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />}
+                      style={{ 
                         background: COLORS.background,
                         border: `1px solid ${COLORS.border}`,
-                        color: COLORS.text.secondary,
+                        color: COLORS.text.primary,
                         fontWeight: 400,
                         fontSize: 15,
                         borderRadius: '6px',
@@ -268,22 +267,20 @@ const Profile = () => {
                       }}
                     />
                   </Form.Item>
-                  <Form.Item style={{ marginBottom: 0 }}>
+                  <Form.Item style={{ marginBottom: '0' }}>
                     <Button 
                       type="primary" 
                       htmlType="submit" 
-                      loading={loading} 
-                      block 
-                      size="large" 
-                      style={{ 
+                      loading={loading}
+                      size="large"
+                      style={{
+                        width: '100%',
+                        marginTop: '16px',
+                        height: '48px',
                         fontWeight: 600,
                         fontSize: 16,
-                        background: COLORS.primary,
-                        borderColor: COLORS.primary,
-                        color: COLORS.card,
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        borderRadius: '6px',
-                        height: '40px'
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                       }}
                     >
                       Update Profile
@@ -291,128 +288,106 @@ const Profile = () => {
                   </Form.Item>
                 </Form>
               </TabPane>
-              <TabPane tab="Security" key="security">
-                 <div style={{ marginBottom: '32px' }}>
-                    <Title level={4} style={{ 
-                        margin: '0 0 16px 0', 
-                        color: COLORS.text.primary, 
-                        fontWeight: 600, 
-                        fontSize: '18px' 
-                    }}>
-                        Change Password
-                    </Title>
-                    <Text style={{ 
-                      display: 'block',
-                      color: COLORS.text.secondary,
-                      fontSize: '14px',
-                      marginBottom: '24px'
-                    }}>
-                      Update your password to keep your account secure.
-                    </Text>
 
-                    <Form
-                      form={passwordForm}
-                      layout="vertical"
-                      onFinish={onPasswordChange}
-                      style={{ maxWidth: 400, margin: '0 auto' }}
+              <TabPane tab="Change Password" key="password">
+                <Form
+                  form={passwordForm}
+                  layout="vertical"
+                  onFinish={onPasswordChange}
+                  style={{ maxWidth: 400, margin: '0 auto' }}
+                >
+                  <Form.Item
+                    name="currentPassword"
+                    label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Current Password</span>}
+                    rules={[{ required: true, message: 'Please input your current password!' }]}
+                    style={{ marginBottom: '16px' }}
+                  >
+                    <Input.Password 
+                      size="large"
+                      prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />}
+                      style={{
+                        background: COLORS.background,
+                        border: `1px solid ${COLORS.border}`,
+                        color: COLORS.text.primary,
+                        fontWeight: 400,
+                        fontSize: 15,
+                        borderRadius: '6px',
+                        padding: '8px 12px'
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="newPassword"
+                    label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>New Password</span>}
+                    rules={[{ required: true, message: 'Please input your new password!' }]}
+                    style={{ marginBottom: '16px' }}
+                  >
+                    <Input.Password 
+                      size="large"
+                      prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />}
+                      style={{
+                        background: COLORS.background,
+                        border: `1px solid ${COLORS.border}`,
+                        color: COLORS.text.primary,
+                        fontWeight: 400,
+                        fontSize: 15,
+                        borderRadius: '6px',
+                        padding: '8px 12px'
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="confirmNewPassword"
+                    label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Confirm New Password</span>}
+                    dependencies={['newPassword']}
+                    hasFeedback
+                    rules={[
+                      { required: true, message: 'Please confirm your new password!' },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('newPassword') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                        },
+                      }),
+                    ]}
+                    style={{ marginBottom: '16px' }}
+                  >
+                    <Input.Password 
+                      size="large"
+                      prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />}
+                      style={{
+                        background: COLORS.background,
+                        border: `1px solid ${COLORS.border}`,
+                        color: COLORS.text.primary,
+                        fontWeight: 400,
+                        fontSize: 15,
+                        borderRadius: '6px',
+                        padding: '8px 12px'
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item style={{ marginBottom: '0' }}>
+                    <Button 
+                      type="primary" 
+                      htmlType="submit" 
+                      loading={loading}
+                      size="large"
+                      style={{
+                        width: '100%',
+                        marginTop: '16px',
+                        height: '48px',
+                        fontWeight: 600,
+                        fontSize: 16,
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                      }}
                     >
-                      <Form.Item
-                        name="currentPassword"
-                        label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Current Password</span>}
-                        rules={[{ required: true, message: 'Please input your current password!' }]}
-                         style={{ marginBottom: '16px' }} // Adjusted margin
-                      >
-                        <Input.Password 
-                          size="large"
-                          prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />} // Icon size
-                          style={{
-                            background: COLORS.background,
-                            border: `1px solid ${COLORS.border}`,
-                            color: COLORS.text.primary,
-                            fontWeight: 400,
-                            fontSize: 15,
-                            borderRadius: '6px',
-                             padding: '8px 12px'
-                          }}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        name="newPassword"
-                        label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>New Password</span>}
-                        rules={[
-                          { required: true, message: 'Please input your new password!' },
-                          { min: 6, message: 'Password must be at least 6 characters!' }
-                        ]}
-                         style={{ marginBottom: '16px' }} // Adjusted margin
-                      >
-                        <Input.Password 
-                          size="large"
-                          prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />} // Icon size
-                          style={{
-                            background: COLORS.background,
-                            border: `1px solid ${COLORS.border}`,
-                            color: COLORS.text.primary,
-                            fontWeight: 400,
-                            fontSize: 15,
-                            borderRadius: '6px',
-                             padding: '8px 12px'
-                          }}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        name="confirmPassword"
-                        label={<span style={{ fontWeight: 600, color: COLORS.text.primary, fontSize: 14 }}>Confirm Password</span>}
-                        dependencies={['newPassword']}
-                        rules={[
-                          { required: true, message: 'Please confirm your password!' },
-                          ({ getFieldValue }) => ({
-                            validator(_, value) {
-                              if (!value || getFieldValue('newPassword') === value) {
-                                return Promise.resolve();
-                              }
-                              return Promise.reject(new Error('The two passwords do not match!'));
-                            },
-                          }),
-                        ]}
-                         style={{ marginBottom: '24px' }} // Adjusted margin
-                      >
-                        <Input.Password 
-                          size="large"
-                          prefix={<LockOutlined style={{ color: COLORS.text.subtle, fontSize: '16px' }} />} // Icon size
-                          style={{
-                            background: COLORS.background,
-                            border: `1px solid ${COLORS.border}`,
-                            color: COLORS.text.primary,
-                            fontWeight: 400,
-                            fontSize: 15,
-                            borderRadius: '6px',
-                             padding: '8px 12px'
-                          }}
-                        />
-                      </Form.Item>
-                      <Form.Item style={{ marginBottom: 0 }}>
-                        <Button 
-                          type="primary" 
-                          htmlType="submit" 
-                          loading={loading} 
-                          block 
-                          size="large" 
-                          style={{ 
-                            fontWeight: 600,
-                            fontSize: 16,
-                            background: COLORS.primary,
-                            borderColor: COLORS.primary,
-                            color: COLORS.card,
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            borderRadius: '6px',
-                            height: '40px'
-                          }}
-                        >
-                          Change Password
-                        </Button>
-                      </Form.Item>
-                    </Form>
-                 </div>
+                      Change Password
+                    </Button>
+                  </Form.Item>
+                </Form>
               </TabPane>
             </Tabs>
           </div>
@@ -422,4 +397,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default AdminProfile; 

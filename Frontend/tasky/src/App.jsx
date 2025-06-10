@@ -10,7 +10,8 @@ import Signup from './Pages/Signup';
 import Dashboard from './Pages/Dashboard';
 import Profile from './Pages/Profile';
 import AdminDashboard from './Pages/AdminDashboard';
- import Report from './Pages/ReportsPage';
+import AdminProfile from './Pages/AdminProfile';
+import Report from './Pages/ReportsPage';
 import ManageUsers from './Pages/ManageUsers';
 import Unauthorized from './Pages/Unauthorized';
 import './styles/theme.css';
@@ -97,7 +98,7 @@ function App() {
                             } />
                             <Route path="/admin/profile" element={
                                 <ProtectedRoute requireAdmin>
-                                    <Profile />
+                                    <AdminProfile />
                                 </ProtectedRoute>
                             } />
                             <Route path="/admin/manage-users" element={

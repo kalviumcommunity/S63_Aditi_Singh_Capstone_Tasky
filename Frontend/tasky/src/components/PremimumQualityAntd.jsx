@@ -89,11 +89,13 @@ const PremiumQualityAntd = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ once: true }}
+                            style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                         >
                             <Card
                                 hoverable
                                 style={{
                                     height: '100%',
+                                    flex: 1,
                                     background: 'white',
                                     border: '1px solid rgba(0, 0, 0, 0.1)',
                                     borderRadius: '12px',
