@@ -73,9 +73,9 @@ export default function LandingPage() {
                                         shape="round" 
                                         onClick={() => navigate('/signup')} 
                                         style={{
-                                            background: 'var(--primary-orange)',
-                                            borderColor: 'var(--primary-orange)',
-                                            boxShadow: '0 8px 20px rgba(249, 115, 22, 0.4)',
+                                            background: 'var(--accent-primary)',
+                                            borderColor: 'var(--accent-primary)',
+                                            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
                                             height: '55px',
                                             fontSize: '18px',
                                             fontWeight: 700,
@@ -93,7 +93,7 @@ export default function LandingPage() {
                                         onClick={() => navigate('/login')} 
                                         style={{
                                             background: 'transparent',
-                                            borderColor: 'var(--text-primary)',
+                                            borderColor: 'var(--button-secondary)',
                                             color: 'var(--text-primary)',
                                             height: '55px',
                                             fontSize: '18px',

@@ -81,7 +81,7 @@ const PremiumQualityAntd = () => {
                 </Text>
             </motion.div>
 
-            <Row gutter={[24, 24]} justify="center" style={{ position: 'relative', zIndex: 1 }}>
+            <Row gutter={[24, 24]} justify="center" align="stretch" style={{ position: 'relative', zIndex: 1 }}>
                 {features.map((feature, index) => (
                     <Col xs={24} sm={12} md={6} key={index} style={{ display: 'flex', flexDirection: 'column' }}>
                         <motion.div
@@ -96,6 +96,7 @@ const PremiumQualityAntd = () => {
                                 style={{
                                     height: '100%',
                                     flex: 1,
+                                    minHeight: '300px',
                                     background: 'white',
                                     border: '1px solid rgba(0, 0, 0, 0.1)',
                                     borderRadius: '12px',
@@ -117,7 +118,7 @@ const PremiumQualityAntd = () => {
                                     style={{
                                         fontSize: '36px',
                                         marginBottom: '16px',
-                                        color: 'var(--accent-secondary)',
+                                        color: 'var(--accent-primary)',
                                         filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                                     }}
                                 >

@@ -1,26 +1,26 @@
 /* Frontend/tasky/src/styles/theme.css */
 
 :root {
-    /* Light Theme */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f9f9f9;
-    --card-bg: #ffffff;
-    --card-border: #e0e0e0;
-    --card-shadow: rgba(0, 0, 0, 0.05);
-    --card-hover-shadow: rgba(0, 0, 0, 0.08);
-    --accent-primary: #f59e0b;
-    --accent-secondary: #fbbf24;
-    --text-primary: #333333;
-    --text-secondary: #555555;
-    --text-subtle: #777777;
-    --border-color: #eee;
-    --button-secondary: #f0f0f0;
-    --hover-bg: #fafafa;
+    /* Black, White, and Grey Theme */
+    --bg-primary: #f0f2f5; /* Light grey for main backgrounds */
+    --bg-secondary: #e6e8eb; /* Slightly darker grey for secondary backgrounds */
+    --card-bg: #ffffff; /* White for card backgrounds */
+    --card-border: #dcdcdc; /* Light grey for card borders */
+    --card-shadow: rgba(0, 0, 0, 0.08); /* Subtle grey shadow */
+    --card-hover-shadow: rgba(0, 0, 0, 0.12); /* Slightly darker grey shadow on hover */
+    --accent-primary: #4a4a4a; /* Dark grey for primary accents */
+    --accent-secondary: #6b6b6b; /* Medium grey for secondary accents */
+    --text-primary: #333333; /* Dark grey for primary text */
+    --text-secondary: #555555; /* Medium grey for secondary text */
+    --text-subtle: #777777; /* Light grey for subtle text */
+    --border-color: #cccccc; /* Medium grey for general borders */
+    --button-secondary: #e0e0e0; /* Light grey for secondary buttons */
+    --hover-bg: #f5f5f5; /* Very light grey for hover backgrounds */
 
     /* Sidebar Colors */
     --sidebar-active-bg: var(--hover-bg);
     --sidebar-hover-bg: var(--hover-bg);
-    --sidebar-active-color: var(--accent-secondary);
+    --sidebar-active-color: var(--accent-primary);
     --sidebar-color: var(--text-primary);
 }
 

@@ -26,7 +26,7 @@ const { Title } = Typography;
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: 'http://localhost:9000/api',
+  baseURL: 'https://s63-aditi-singh-capstone-tasky-1.onrender.com',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'

@@ -47,7 +47,7 @@ const Features = () => {
     ];
 
     return (
-        <div id="features-section" style={{ padding: '60px 0', background: '#fff' }}>
+        <div id="features-section" style={{ padding: '60px 0', background: 'var(--bg-primary)' }}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -55,8 +55,8 @@ const Features = () => {
                 viewport={{ once: true }}
                 style={{ textAlign: 'center', marginBottom: 40 }}
             >
-                <Title level={2} style={{ color: '#333' }}>Features</Title>
-                <Text style={{ fontSize: 18, color: '#555' }}>Discover the key features that make TASKY stand out</Text>
+                <Title level={2} style={{ color: 'var(--text-primary)' }}>Features</Title>
+                <Text style={{ fontSize: 18, color: 'var(--text-secondary)' }}>Discover the key features that make TASKY stand out</Text>
             </motion.div>
             <Row gutter={[24, 24]} justify="center">
                 {features.map((feature, index) => (
@@ -73,14 +73,14 @@ const Features = () => {
                                     textAlign: 'center',
                                     padding: '20px',
                                     borderRadius: '12px',
-                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                                    background: '#fff',
+                                    boxShadow: '0 4px 8px var(--card-shadow)',
+                                    background: 'var(--card-bg)',
                                     height: '100%'
                                 }}
                             >
-                                <div style={{ fontSize: '40px', color: '#f59e0b', marginBottom: '16px' }}>{feature.icon}</div>
-                                <Title level={4} style={{ color: '#333' }}>{feature.title}</Title>
-                                <Text style={{ color: '#555' }}>{feature.description}</Text>
+                                <div style={{ fontSize: '40px', color: 'var(--accent-primary)', marginBottom: '16px' }}>{feature.icon}</div>
+                                <Title level={4} style={{ color: 'var(--text-primary)' }}>{feature.title}</Title>
+                                <Text style={{ color: 'var(--text-secondary)' }}>{feature.description}</Text>
                             </Card>
                         </motion.div>
                     </Col>

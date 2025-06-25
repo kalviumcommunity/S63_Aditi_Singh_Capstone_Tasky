@@ -30,7 +30,7 @@ const Report = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/api/users/users', {
+      const response = await axios.get('https://s63-aditi-singh-capstone-tasky-1.onrender.com/api/users/users', {
         withCredentials: true,
       });
       setUsers(response.data.users);
@@ -42,7 +42,7 @@ const Report = () => {
   useEffect(() => {
     const fetchReportSummary = async (userId, priority) => {
       try {
-        const response = await axios.get('http://localhost:9000/api/reports/summary', {
+        const response = await axios.get('https://s63-aditi-singh-capstone-tasky-1.onrender.com/api/reports/summary', {
           withCredentials: true,
           params: { userId, priority },
         });
