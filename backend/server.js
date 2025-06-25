@@ -47,7 +47,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000,
   secure: process.env.NODE_ENV === 'production',
   httpOnly: true,
-  sameSite: 'strict',
+  sameSite: 'none',
 }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
