@@ -24,10 +24,7 @@ const Navbar = () => {
         }
     };
 
-    const menuItems = [
-        { key: 'features', label: 'Features' },
-        { key: 'contact', label: 'Contact' },
-    ];
+    const menuItems = [];
 
     if (user) {
         if (user.role === 'admin') {

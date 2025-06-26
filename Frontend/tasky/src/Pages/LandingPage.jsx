@@ -86,25 +86,6 @@ export default function LandingPage() {
                                         Get Started
                                     </Button>
                                 </motion.div>
-                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button 
-                                        size="large" 
-                                        shape="round" 
-                                        onClick={() => navigate('/login')} 
-                                        style={{
-                                            background: 'transparent',
-                                            borderColor: 'var(--button-secondary)',
-                                            color: 'var(--text-primary)',
-                                            height: '55px',
-                                            fontSize: '18px',
-                                            fontWeight: 600,
-                                            padding: '0 40px'
-                                        }}
-                                        icon={<ReadOutlined />}
-                                    >
-                                        Learn More
-                                    </Button>
-                                </motion.div>
                             </Space>
                         </motion.div>
                     </Col>
@@ -141,7 +122,9 @@ export default function LandingPage() {
 
             <Features />
             <PremiumQualityAntd />
-            <Subscribe />
+            <div id="subscribe-section">
+              <Subscribe />
+            </div>
             <Footer />
         </Layout>
   );
