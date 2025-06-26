@@ -42,11 +42,22 @@ exports.isAuthenticated = (req, res, next) => {
   console.log(`[Request ID: ${requestId}] req.session.user:`, req.session ? req.session.user : 'Session not found');
   if (req.session && req.session.user) {
     console.log('User authenticated via session.', req.session.user);
-    // Optionally, populate req.user from session if needed for consistency
     req.user = req.session.user;
     return next();
   } else {
-    console.log('User not authenticated via session.');
-    return res.status(401).json({ error: 'Unauthorized' });
+    // Try JWT token authentication as fallback
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      console.log('User not authenticated via session or JWT.');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      return next();
+    } catch (err) {
+      console.log('JWT token invalid.');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
   }
 };
