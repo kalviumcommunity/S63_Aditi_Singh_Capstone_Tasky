@@ -56,6 +56,7 @@ export const AuthProvider = ({ children }) => {
       await axios.post('/users/logout', {}, { withCredentials: true });
       setUser(null);
       setIsAuthenticated(false);
+      await checkAuth();
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
